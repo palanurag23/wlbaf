@@ -25,6 +25,13 @@ dependencies:
     sdk: flutter
   image_picker: ^0.8.0+3  
   provider: ^5.0.0
+  sqflite: ^2.0.0+3
+  path: ^1.8.0
+  numberpicker: ^2.1.1
+  shared_preferences: ^2.0.6
+  intl: ^0.17.0
+  toggle_switch: ^1.1.0
+  percent_indicator: ^3.0.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -47,9 +54,11 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - ./lib/assets/nnn.jpeg
+    - ./lib/assets/ooo.jpeg
+    - ./lib/assets/mmm.png
+  
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -62,10 +71,13 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: MyFlutterApp
+      fonts:
+        - asset: icons/MyFlutterApp.ttf
+    - family: ProgressIcon
+      fonts:
+        - asset: icons/ProgressIcon.ttf        
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

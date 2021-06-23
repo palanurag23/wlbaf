@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/single_child_widget.dart';
+import 'package:wlbaf/screens/addWeight.dart';
+import 'package:wlbaf/screens/journeyListScreen.dart';
+import 'package:wlbaf/screens/loadingScreen.dart';
+import 'package:wlbaf/screens/newJourney.dart';
+import 'package:wlbaf/screens/tabs_screen.dart';
+import 'package:wlbaf/screens/testingDataScreen.dart';
 import 'package:wlbaf/screens/testingScreen.dart';
 import 'package:wlbaf/testingFolder/testBlocScreen.dart';
+import 'package:provider/provider.dart';
+import './providers/providers.dart';
 
 void main() {
   runApp(MyApp());
@@ -8,30 +17,52 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  GlobalKey materialNavigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: <SingleChildWidget>[
+        ChangeNotifierProvider.value(value: UnitsData()),
+        ChangeNotifierProvider.value(value: CurrentJourney()),
+        ChangeNotifierProvider.value(value: JourneysData()),
+        ChangeNotifierProvider.value(value: WeightAndPicturesData()),
+        Provider.value(value: SharedPreferencesData()),
+        Provider.value(
+            value: MaterialNavigatorKey(
+                materialNavigatorKey: materialNavigatorKey)),
+      ],
+      child: MaterialApp(
+        navigatorKey: materialNavigatorKey,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          bottomAppBarColor: Colors.white,
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or simply save your changes to "hot reload" in a Flutter IDE).
+          // Notice that the counter didn't reset back to zero; the application
+          // is not restarted.
+          primarySwatch: Colors.blue,
+        ),
+        home: LoadingScreen(), //MyHomePage(title: 'Flutter Demo Home Page'),
+        routes: {
+          '/JourneyListScreen': (context) => JourneyListScreen(),
+          '/AddNewJourney': (context) => AddNewJourney(),
+          '/ips': (context) => ImagePickerScreen(),
+          '/Tabs_screen': (context) => TabsScreen(),
+          '/TestingDataScreen': (context) => TestingDataScreen(),
+          '/BlocScreen': (context) => BlocScreen(),
+          '/AddWeightScreen': (context) => AddWeight()
+        },
       ),
-      home: ImagePickerScreen(), //MyHomePage(title: 'Flutter Demo Home Page'),
-      routes: {
-        '/BlocScreen': (context) => BlocScreen(),
-      },
     );
   }
 }
-
+/*
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -55,23 +86,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
+     
       _counter++;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -119,3 +141,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+*/
