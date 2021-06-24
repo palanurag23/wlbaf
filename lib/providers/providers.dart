@@ -105,7 +105,7 @@ class JourneysData with ChangeNotifier {
   List<Journey> journeysList = [];
   List<Journey> get getJourneysList => [...journeysList];
   Journey journey = Journey();
-  addNewJourney(
+  Future<void> addNewJourney(
     BuildContext context,
     String name,
     num targetWeight,
@@ -208,7 +208,7 @@ class WeightAndPicturesData with ChangeNotifier {
     notifyListeners();
   }
 
-  addWeightAndPic(
+  Future<void> addWeightAndPic(
       num weight, int journeyId, bool havePic, String picPath) async {
     final dateTime = DateTime.now();
     WeightAndPic weightAndPic = WeightAndPic(

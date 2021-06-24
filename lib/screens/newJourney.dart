@@ -14,11 +14,44 @@ class AddNewJourney extends StatefulWidget {
 
 class _AddNewJourneyState extends State<AddNewJourney> {
   TextEditingController _noteController;
+  String note = '';
   double _currentWeightValue = 150;
   int _currentGoalValue = 40;
   File _image;
   final picker = ImagePicker();
   int duration = 1;
+  bool isInitialized = false;
+  GlobalKey materialNavigatorKey;
+  @override
+  void initState() {
+    super.initState();
+    _noteController = TextEditingController.fromValue(
+      TextEditingValue(
+        text: note,
+      ),
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (!isInitialized) {
+      materialNavigatorKey =
+          Provider.of<MaterialNavigatorKey>(context, listen: false).get();
+      setState(() {
+        isInitialized = true;
+      });
+    }
+
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _noteController.dispose();
+    super.dispose();
+  }
+
   Future getImage() async {
     print('a');
     PickedFile pickedFile;
@@ -56,8 +89,26 @@ class _AddNewJourneyState extends State<AddNewJourney> {
         ElevatedButton.icon(
             onPressed: journeyId == 0
                 ? () {}
-                : () {
-                    Navigator.of(context).pop();
+                : () async {
+                    if (_noteController.text.isNotEmpty && _image != null) {
+                      await Provider.of<JourneysData>(
+                              materialNavigatorKey.currentContext,
+                              listen: false)
+                          .addNewJourney(
+                              context,
+                              _noteController.text,
+                              _currentGoalValue,
+                              duration,
+                              false,
+                              _currentGoalValue >= _currentWeightValue
+                                  ? true
+                                  : false);
+                      await Provider.of<WeightAndPicturesData>(context,
+                              listen: false)
+                          .addWeightAndPic(_currentWeightValue, journeyId,
+                              _image != null ? true : false, _image.path);
+                      Navigator.of(context).pop();
+                    }
                   },
             icon: Icon(Icons.save),
             label: Text('Save $journeyId'))
@@ -87,7 +138,8 @@ class _AddNewJourneyState extends State<AddNewJourney> {
               child: TextField(
                   maxLength: 50,
                   onChanged: (String note) {
-                    print(note);
+                    //     print(note);
+                    print(_noteController.text);
                   },
                   textAlign: TextAlign.center,
                   style: TextStyle(
