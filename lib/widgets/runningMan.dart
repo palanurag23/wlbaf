@@ -15,10 +15,11 @@ class RunningMan extends StatelessWidget {
     double percentCalculator() {
       Journey journey =
           Provider.of<JourneysData>(context, listen: false).journey;
+      print(journey.weightLoss);
       num targetWeight = journey.targetWeight;
       bool weightLoss = journey.weightLoss;
       if (weightLoss) {
-        print('1weightLoss $weightLoss');
+        print('if weightLoss $weightLoss');
         percentage =
             (startingWeight - currentWeight) / (startingWeight - targetWeight);
         print(percentage);
@@ -28,7 +29,7 @@ class RunningMan extends StatelessWidget {
                 : 1
             : 0.1;
       } else {
-        print('2weightLoss $weightLoss');
+        print('else weightLoss $weightLoss');
 
         percentage =
             (currentWeight - startingWeight) / (targetWeight - startingWeight);

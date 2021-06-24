@@ -59,15 +59,25 @@ class CurrentJourney with ChangeNotifier {
     }
   }
 
-  set(int id, BuildContext context) {
+  set(int id, BuildContext context, bool shouldFetchWeight,
+      bool shouldEmpty) async {
     SharedPreferences prefs =
         Provider.of<SharedPreferencesData>(context, listen: false).get();
     prefs.setInt('currentJourneyId', id);
 
     currentJourneyId = id;
+    Provider.of<JourneysData>(context, listen: false)
+        .setJourney(currentJourneyId);
     //  imageCache.clear();
-    Provider.of<WeightAndPicturesData>(context, listen: false)
-        .fetchAndSetData(id);
+    if (shouldEmpty) {
+      await Provider.of<WeightAndPicturesData>(context, listen: false)
+          .setEmpty();
+    }
+    if (shouldFetchWeight) {
+      print('shouldFetchWeight $shouldFetchWeight');
+      await Provider.of<WeightAndPicturesData>(context, listen: false)
+          .fetchAndSetData(id);
+    }
     notifyListeners();
   }
 
@@ -117,11 +127,12 @@ class JourneysData with ChangeNotifier {
         Provider.of<SharedPreferencesData>(context, listen: false).prefs;
 
     int id = prefs.getInt('journeyCount') + 1;
-
+    print('$id');
     prefs.setInt('currentJourneyId', id);
     prefs.setInt('journeyCount', id);
-    Provider.of<CurrentJourney>(context, listen: false).set(id, context);
-    Journey journey = Journey(
+    Provider.of<CurrentJourney>(context, listen: false)
+        .set(id, context, false, true);
+    journey = Journey(
       durationInWeeks: durationInWeeks,
       id: id,
       journeyOver: false,
@@ -131,6 +142,7 @@ class JourneysData with ChangeNotifier {
       weightTableName: 'weightDatabaseTableName$id',
     );
     journeysList.add(journey);
+    print('add journey ${journey.weightLoss}');
     Map<String, Object> journeyMap = {
       'id': id,
       'name': name,
@@ -152,7 +164,8 @@ class JourneysData with ChangeNotifier {
     bool sameId =
         Provider.of<CurrentJourney>(context, listen: false).get() == id;
     if (sameId) {
-      Provider.of<CurrentJourney>(context, listen: false).set(0, context);
+      Provider.of<CurrentJourney>(context, listen: false)
+          .set(0, context, false, false);
     }
 
     print('deleting .... journey......................$id');

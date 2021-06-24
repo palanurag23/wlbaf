@@ -47,6 +47,7 @@ class _TabsScreenState extends State<TabsScreen> {
     if (!isInitialized) {
       weightAndPics = Provider.of<WeightAndPicturesData>(context, listen: false)
           .weightAndPicList;
+      print('weightAndPics.isempty' + weightAndPics.isEmpty.toString());
       weightListEmpty = weightAndPics.isEmpty;
       weightAddedToday = weightListEmpty
           ? false

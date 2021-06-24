@@ -50,8 +50,11 @@ class _JourneyListScreenState extends State<JourneyListScreen> {
                       onTap: () async {
                         await Provider.of<CurrentJourney>(context,
                                 listen: false)
-                            .set(journeyList[index].id,
-                                materialNavigatorKey.currentContext);
+                            .set(
+                                journeyList[index].id,
+                                materialNavigatorKey.currentContext,
+                                true,
+                                false);
                         Navigator.of(context).pushNamed('/Tabs_screen');
                       },
                       title: Text(journeyList[index].id.toString()),

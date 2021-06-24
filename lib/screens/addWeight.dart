@@ -96,8 +96,11 @@ class _AddWeightState extends State<AddWeight> {
             onPressed: journeyId == 0
                 ? () {}
                 : () {
-                    weightAndPicturesData.addWeightAndPic(_currentValue,
-                        journeyId, addImage, addImage ? _image.path : '.....');
+                    weightAndPicturesData.addWeightAndPic(
+                        _currentValue,
+                        journeyId,
+                        _image != null,
+                        _image != null ? _image.path : '.....');
                     Navigator.of(context).pop();
                   },
             icon: Icon(Icons.save),
@@ -144,7 +147,7 @@ class _AddWeightState extends State<AddWeight> {
               ),
               value: _currentValue,
               minValue: 0,
-              maxValue: 100,
+              maxValue: 1000,
               onChanged: (value) => setState(() => _currentValue = value),
             ),
             Text('Current value: $_currentValue'),

@@ -82,34 +82,53 @@ class _AddNewJourneyState extends State<AddNewJourney> {
   @override
   Widget build(BuildContext context) {
     double ratio = MediaQuery.of(context).size.height / 896;
-    int journeyId = Provider.of<CurrentJourney>(context).currentJourneyId;
+    int journeyId =
+        Provider.of<CurrentJourney>(context, listen: false).currentJourneyId;
 
     return Scaffold(
       persistentFooterButtons: [
         ElevatedButton.icon(
-            onPressed: journeyId == 0
-                ? () {}
-                : () async {
-                    if (_noteController.text.isNotEmpty && _image != null) {
-                      await Provider.of<JourneysData>(
-                              materialNavigatorKey.currentContext,
-                              listen: false)
-                          .addNewJourney(
-                              context,
-                              _noteController.text,
-                              _currentGoalValue,
-                              duration,
-                              false,
-                              _currentGoalValue >= _currentWeightValue
-                                  ? true
-                                  : false);
-                      await Provider.of<WeightAndPicturesData>(context,
-                              listen: false)
-                          .addWeightAndPic(_currentWeightValue, journeyId,
-                              _image != null ? true : false, _image.path);
-                      Navigator.of(context).pop();
-                    }
-                  },
+            onPressed:
+                // journeyId == 0
+                //  ? () {}
+                //:
+                () async {
+              print('if' +
+                  _noteController.text.isNotEmpty.toString() +
+                  (_image != null).toString());
+
+              if (_noteController.text.isNotEmpty && _image != null) {
+                print('if' +
+                    _noteController.text.isNotEmpty.toString() +
+                    (_image != null).toString());
+
+                await Provider.of<JourneysData>(
+                        materialNavigatorKey.currentContext,
+                        listen: false)
+                    .addNewJourney(
+                        context,
+                        _noteController.text,
+                        _currentGoalValue,
+                        duration,
+                        false,
+                        _currentGoalValue <= _currentWeightValue);
+                print('journey savrd');
+
+                await Provider.of<WeightAndPicturesData>(context, listen: false)
+                    .addWeightAndPic(
+                        _currentWeightValue,
+                        Provider.of<CurrentJourney>(context, listen: false)
+                            .get(),
+                        _image != null ? true : false,
+                        _image.path);
+                Provider.of<WeightAndPicturesData>(context, listen: false)
+                    .fetchAndSetData(
+                        Provider.of<CurrentJourney>(context, listen: false)
+                            .get());
+                print('weight saverd');
+                Navigator.of(context).pushNamed('/Tabs_screen');
+              }
+            },
             icon: Icon(Icons.save),
             label: Text('Save $journeyId'))
       ],
