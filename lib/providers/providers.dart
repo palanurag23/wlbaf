@@ -40,13 +40,21 @@ class CurrentJourney with ChangeNotifier {
     print(' checkJourneyCount if empty then false= $checkJourneyCount ');
 
     if (checkJourneyCount) {
+      print('if $checkJourneyCount checkJourneyCount');
       currentJourneyId = prefs.getInt('currentJourneyId');
-      print('$checkJourneyCount$currentJourneyId');
+      int x = prefs.getInt('journeyCount');
+      print('$checkJourneyCount$currentJourneyId$x');
     } else {
-      prefs.setInt('journeyCount', 0);
+      print('else $checkJourneyCount checkJourneyCount');
 
-      prefs.setInt('currentJourneyId', 0);
+      await prefs.setInt('journeyCount', 0);
+
+      await prefs.setInt('currentJourneyId', 0);
+      print('      await prefs.setInt(currentJourneyId, 0);');
+      print('      await prefs.setInt(journeyCount, 0);');
+
       currentJourneyId = 0;
+      notifyListeners();
       print('$currentJourneyId');
     }
 
@@ -63,7 +71,7 @@ class CurrentJourney with ChangeNotifier {
       bool shouldEmpty) async {
     SharedPreferences prefs =
         Provider.of<SharedPreferencesData>(context, listen: false).get();
-    prefs.setInt('currentJourneyId', id);
+    await prefs.setInt('currentJourneyId', id);
 
     currentJourneyId = id;
     Provider.of<JourneysData>(context, listen: false)
@@ -124,12 +132,12 @@ class JourneysData with ChangeNotifier {
     bool weightLoss,
   ) async {
     SharedPreferences prefs =
-        Provider.of<SharedPreferencesData>(context, listen: false).prefs;
+        Provider.of<SharedPreferencesData>(context, listen: false).get();
 
     int id = prefs.getInt('journeyCount') + 1;
     print('$id');
-    prefs.setInt('currentJourneyId', id);
-    prefs.setInt('journeyCount', id);
+    await prefs.setInt('currentJourneyId', id);
+    await prefs.setInt('journeyCount', id);
     Provider.of<CurrentJourney>(context, listen: false)
         .set(id, context, false, true);
     journey = Journey(
@@ -176,9 +184,9 @@ class JourneysData with ChangeNotifier {
     notifyListeners();
   }
 
-  setJourney(int currentJourneyId) {
+  Future<void> setJourney(int currentJourneyId) async {
     if (currentJourneyId != 0)
-      journey = journeysList.firstWhere((e) => e.id == currentJourneyId);
+      journey = await journeysList.firstWhere((e) => e.id == currentJourneyId);
     notifyListeners();
   }
 
@@ -200,9 +208,9 @@ class JourneysData with ChangeNotifier {
           .toList();
     }
 
-    if (currentJourneyId != null) {
+    if (currentJourneyId != null && journeysList.isNotEmpty) {
       print('currentJourneyId$currentJourneyId');
-      setJourney(currentJourneyId);
+      await setJourney(currentJourneyId);
     }
 
     notifyListeners();
@@ -211,28 +219,36 @@ class JourneysData with ChangeNotifier {
 }
 
 class WeightAndPicturesData with ChangeNotifier {
-  List<WeightAndPic> weightAndPicList = [];
+  List<WeightAndPic> _weightAndPicList = [];
+//without '_' like weightAndPicList not _weightAndPicList
+//it will be editable from outside
+//like Provider.of<WeightAndPicturesData>(context).weightAndPicList.SORT;
+// USE '_'  AND USE GETTER //List<WeightAndPic> get weightAndPics
+
   List<WeightAndPic> get weightAndPics {
-    return [...weightAndPicList];
+    return [..._weightAndPicList];
   }
 
   setEmpty() {
-    weightAndPicList = [];
+    _weightAndPicList = [];
     notifyListeners();
   }
 
   Future<void> addWeightAndPic(
       num weight, int journeyId, bool havePic, String picPath) async {
     final dateTime = DateTime.now();
+    // .add(Duration(
+    //     days:
+    //         35)); //..............................................[[[[[[[[[[[[]]]]]]]]]]]]
     WeightAndPic weightAndPic = WeightAndPic(
         path: picPath,
         weight: weight,
         havePicture: havePic,
         dateTime: dateTime.toIso8601String());
-    if (weightAndPicList.isEmpty) {
+    if (_weightAndPicList.isEmpty) {
       print('weightListEmpty');
 
-      weightAndPicList.add(weightAndPic);
+      _weightAndPicList.add(weightAndPic);
       await DbHelper.insertWeight('weightDatabaseTableName$journeyId', {
         'dateTime': weightAndPic.dateTime,
         'weight': weightAndPic.weight,
@@ -243,9 +259,9 @@ class WeightAndPicturesData with ChangeNotifier {
     } else {
       if (DateFormat('dd/MM/yy').format(dateTime) !=
           DateFormat('dd/MM/yy')
-              .format(DateTime.parse(weightAndPicList.last.dateTime))) {
+              .format(DateTime.parse(_weightAndPicList.last.dateTime))) {
         print('date not same ..adding weightandpic');
-        weightAndPicList.add(weightAndPic);
+        _weightAndPicList.add(weightAndPic);
         await DbHelper.insertWeight('weightDatabaseTableName$journeyId', {
           'dateTime': weightAndPic.dateTime,
           'weight': weightAndPic.weight,
@@ -257,7 +273,7 @@ class WeightAndPicturesData with ChangeNotifier {
         print('....weightListNotEmpty ... date is same ... replacing');
 
         await deleteSingleWeightAndPics(
-            weightAndPicList.last.dateTime, journeyId);
+            _weightAndPicList.last.dateTime, journeyId);
         await DbHelper.insertWeight('weightDatabaseTableName$journeyId', {
           'dateTime': weightAndPic.dateTime,
           'weight': weightAndPic.weight,
@@ -265,7 +281,7 @@ class WeightAndPicturesData with ChangeNotifier {
           'picturePath': weightAndPic.path
         });
         // weightAndPicList.removeLast();
-        weightAndPicList.add(weightAndPic);
+        _weightAndPicList.add(weightAndPic);
         notifyListeners();
       }
     }
@@ -275,7 +291,7 @@ class WeightAndPicturesData with ChangeNotifier {
     print('deleting .... weight......................$dateTime');
     await DbHelper.deleteSingleWeight(
         dateTime, 'weightDatabaseTableName$journeyId');
-    weightAndPicList.removeWhere((element) => element.dateTime == dateTime);
+    _weightAndPicList.removeWhere((element) => element.dateTime == dateTime);
     notifyListeners();
   }
 
@@ -287,7 +303,7 @@ class WeightAndPicturesData with ChangeNotifier {
     } else {
       print(weightAndPicDataList);
     }
-    weightAndPicList = weightAndPicDataList
+    _weightAndPicList = weightAndPicDataList
         .map((e) => WeightAndPic(
             dateTime: e['dateTime'],
             weight: e['weight'],
@@ -296,6 +312,6 @@ class WeightAndPicturesData with ChangeNotifier {
         .toList();
     notifyListeners();
     print(
-        '................weightsAndpic fetched and set for weightDatabaseTableName$journeyId');
+        '................weightsAndpic length=${weightAndPicDataList.length} fetched and set for weightDatabaseTableName$journeyId');
   }
 }

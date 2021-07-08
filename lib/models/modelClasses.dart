@@ -29,3 +29,10 @@ class Journey {
     this.weightTableName,
   });
 }
+
+class ScreenArguments {
+  ScreenArguments({this.list, this.appBarTitle, this.number});
+  String appBarTitle;
+  List<WeightAndPic> list;
+  int number;
+}

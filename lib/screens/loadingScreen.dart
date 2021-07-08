@@ -46,17 +46,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
       setState(() {
         isInitialized = true;
       });
+      //  Navigator.of(context).pushNamed('/TestingDataScreen');
     }
     var journeyList =
         Provider.of<JourneysData>(context, listen: false).journeysList;
 
     Provider.of<WeightAndPicturesData>(context, listen: false)
-            .weightAndPicList
+            .weightAndPics
             .isEmpty
         ? journeyList.isEmpty
-            ? Navigator.of(context).pushNamed('/AddNewJourney')
-            : Navigator.of(context).pushNamed('/JourneyListScreen')
-        : Navigator.of(context).pushNamed('/Tabs_screen');
+            ? Navigator.of(context).pushReplacementNamed('/AddNewJourney')
+            : Navigator.of(context).pushReplacementNamed('/JourneyListScreen')
+        : Navigator.of(context).pushReplacementNamed('/Tabs_screen');
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }

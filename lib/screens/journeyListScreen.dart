@@ -31,14 +31,24 @@ class _JourneyListScreenState extends State<JourneyListScreen> {
     journeyList = Provider.of<JourneysData>(context).journeysList;
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Text('add'),
+      backgroundColor: Color.fromRGBO(240, 255, 240, 1),
+      floatingActionButton: FloatingActionButton.extended(
+        icon: Icon(Icons.add),
+        label: Text('journey'),
         onPressed: () {
           Navigator.of(context).pushNamed('/AddNewJourney');
         },
       ),
       appBar: AppBar(
-        title: Text('journey list'),
+        iconTheme: IconThemeData(color: Color.fromRGBO(24, 96, 72, 1)),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Your Journeys !',
+          style: TextStyle(
+              color: Color.fromRGBO(24, 96, 72, 1),
+              fontWeight: FontWeight.bold),
+        ),
       ),
       body: !initialized
           ? CircularProgressIndicator()

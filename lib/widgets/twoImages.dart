@@ -3,15 +3,19 @@ import 'package:intl/intl.dart';
 
 class TwoImages extends StatefulWidget {
   num firstImageWeight;
-  TwoImages({this.firstImageWeight});
+  String units;
+
+  TwoImages({this.firstImageWeight, this.units});
 
   @override
   _TwoImagesState createState() => _TwoImagesState();
 }
 
 class _TwoImagesState extends State<TwoImages> {
-  double width1 = 0.42;
-  double width2 = 0.54;
+  // double width1 = 0.42;
+  // double width2 = 0.54;
+  double width1 = 0.40;
+  double width2 = 0.52;
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +33,8 @@ class _TwoImagesState extends State<TwoImages> {
               GestureDetector(
                 onTap: () {
                   setState(() {
-                    width1 = 0.54;
-                    width2 = 0.42;
+                    width1 = 0.52;
+                    width2 = 0.40;
                   });
                 },
                 child: Container(
@@ -38,10 +42,10 @@ class _TwoImagesState extends State<TwoImages> {
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey
-                              .withOpacity(width2 > width1 ? 0.0 : 0.3),
+                              .withOpacity(width2 > width1 ? 0.0 : 0.5),
                           spreadRadius: 5,
                           blurRadius: 7,
-                          offset: Offset(01, 1), // changes position of shadow
+                          offset: Offset(03, 3), // changes position of shadow
                         ),
                       ],
                       color: Colors.blueGrey,
@@ -55,7 +59,7 @@ class _TwoImagesState extends State<TwoImages> {
                       borderRadius: BorderRadius.circular(11),
                       child: Image.asset(
                         //'./lib/assets/mmm.png',
-                        './lib/assets/ooo.jpeg',
+                        './lib/assets/ooo1.jpeg',
                         fit: BoxFit.cover,
                       ),
                     )
@@ -76,7 +80,7 @@ class _TwoImagesState extends State<TwoImages> {
                         fontWeight: FontWeight.w900),
                     children: <TextSpan>[
                       TextSpan(
-                          text: 'kg',
+                          text: widget.units,
                           style: TextStyle(
                               color: Colors.blueGrey[300],
                               fontStyle: FontStyle.italic,
@@ -91,8 +95,8 @@ class _TwoImagesState extends State<TwoImages> {
               GestureDetector(
                 onTap: () {
                   setState(() {
-                    width2 = 0.54;
-                    width1 = 0.42;
+                    width2 = 0.52;
+                    width1 = 0.40;
                   });
                 },
                 child: Container(
@@ -103,7 +107,7 @@ class _TwoImagesState extends State<TwoImages> {
                             Colors.grey.withOpacity(width2 > width1 ? 0.3 : 0),
                         spreadRadius: 5,
                         blurRadius: 7,
-                        offset: Offset(03, 3), // changes position of shadow
+                        offset: Offset(-3, 3), // changes position of shadow
                       ),
                     ],
                     color: Colors.blueGrey,
@@ -117,7 +121,7 @@ class _TwoImagesState extends State<TwoImages> {
                     borderRadius: BorderRadius.circular(11),
                     child: Image.asset(
                       //'./lib/assets/mmm.png',
-                      './lib/assets/ooo.jpeg',
+                      './lib/assets/ooo1.jpeg',
                       fit: BoxFit.cover,
                     ),
                   ),

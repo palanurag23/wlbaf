@@ -7,17 +7,21 @@ import '../providers/providers.dart';
 
 class RunningMan extends StatelessWidget {
   num currentWeight;
+  Journey journey;
   num startingWeight;
-  RunningMan({@required this.currentWeight, @required this.startingWeight});
+  RunningMan(
+      {@required this.currentWeight,
+      @required this.journey,
+      @required this.startingWeight});
   @override
   Widget build(BuildContext context) {
     double percentage;
     double percentCalculator() {
-      Journey journey =
-          Provider.of<JourneysData>(context, listen: false).journey;
+      // Journey journey =
+      //     Provider.of<JourneysData>(context, listen: false).journey;
       print(journey.weightLoss);
       num targetWeight = journey.targetWeight;
-      bool weightLoss = journey.weightLoss;
+      bool weightLoss = startingWeight >= targetWeight; //journey.weightLoss;
       if (weightLoss) {
         print('if weightLoss $weightLoss');
         percentage =

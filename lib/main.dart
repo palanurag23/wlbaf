@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:wlbaf/screens/GalleryViewScreen.dart';
+import 'package:wlbaf/screens/JourneyMonthsScreen.dart';
 import 'package:wlbaf/screens/addWeight.dart';
 import 'package:wlbaf/screens/journeyListScreen.dart';
 import 'package:wlbaf/screens/loadingScreen.dart';
+import 'package:wlbaf/screens/monthsWeightAndPicsScreen.dart';
 import 'package:wlbaf/screens/newJourney.dart';
+import 'package:wlbaf/screens/photo_gallery.dart';
 import 'package:wlbaf/screens/tabs_screen.dart';
 import 'package:wlbaf/screens/testingDataScreen.dart';
 import 'package:wlbaf/screens/testingScreen.dart';
@@ -50,6 +55,11 @@ class MyApp extends StatelessWidget {
         ),
         home: LoadingScreen(), //MyHomePage(title: 'Flutter Demo Home Page'),
         routes: {
+          PhotoGallery.routeName: (context) => PhotoGallery(),
+          GalleryViewScreen.routeName: (context) => GalleryViewScreen(),
+          '/MonthsWeightAndPicsScreen': (context) =>
+              MonthsWeightAndPicsScreen(),
+          '/JourneyMonthScreen': (context) => JourneyMonthScreen(),
           '/JourneyListScreen': (context) => JourneyListScreen(),
           '/AddNewJourney': (context) => AddNewJourney(),
           '/ips': (context) => ImagePickerScreen(),

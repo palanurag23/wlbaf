@@ -28,7 +28,9 @@ class _TestingDataScreenState extends State<TestingDataScreen> {
 
   @override
   Widget build(BuildContext context) {
-    int journeyId = Provider.of<CurrentJourney>(context).currentJourneyId;
+    print('testing data screen build starts');
+    int journeyId = Provider.of<CurrentJourney>(context).get();
+    print(journeyId);
     return Scaffold(
       appBar: AppBar(
         actions: [Center(child: Text(journeyId.toString()))],
@@ -41,7 +43,7 @@ class _TestingDataScreenState extends State<TestingDataScreen> {
                 child: Column(
                   children: [
                     Container(
-                      height: 300,
+                      height: 200,
                       child: Consumer<JourneysData>(
                         child: Text('empty journey'),
                         builder: (context, journeyData, child) {
@@ -103,12 +105,12 @@ class _TestingDataScreenState extends State<TestingDataScreen> {
                       ),
                     ),
                     Container(
-                      height: 500,
+                      height: 600,
                       child: Consumer<WeightAndPicturesData>(
                         child: Text('empty weightAndPicsData'),
                         builder: (context, weightAndPicturesData, child) {
                           List<WeightAndPic> weightAndPicsList =
-                              weightAndPicturesData.weightAndPicList;
+                              weightAndPicturesData.weightAndPics;
                           return SingleChildScrollView(
                             child: Column(
                               children: [

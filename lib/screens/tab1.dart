@@ -19,10 +19,13 @@ class _Tab1State extends State<Tab1> {
   bool isInitialized = false;
   GlobalKey materialNavigatorKey;
   int firstPicindex;
+  Journey journey;
   bool onlyOnePic;
   @override
   void didChangeDependencies() {
     if (!isInitialized) {
+      journey = Provider.of<JourneysData>(context, listen: false).journey;
+
       materialNavigatorKey =
           Provider.of<MaterialNavigatorKey>(context, listen: false).get();
       setState(() {
@@ -36,10 +39,11 @@ class _Tab1State extends State<Tab1> {
 
   @override
   Widget build(BuildContext context) {
+    String units = Provider.of<UnitsData>(context).units;
+
     double ratio = MediaQuery.of(context).size.height / 896; //> 900 ? 1 : 0.7;
     currentjourneyId = Provider.of<CurrentJourney>(context).currentJourneyId;
-    weightAndPics =
-        Provider.of<WeightAndPicturesData>(context).weightAndPicList;
+    weightAndPics = Provider.of<WeightAndPicturesData>(context).weightAndPics;
     firstPicindex = weightAndPics.indexWhere((element) => element.havePicture);
     lastPicindex =
         weightAndPics.lastIndexWhere((element) => element.havePicture);
@@ -48,36 +52,39 @@ class _Tab1State extends State<Tab1> {
         weightAndPics.isEmpty.toString() +
         ' onlyOnePic=' +
         onlyOnePic.toString());
-    return SingleChildScrollView(
-      child: currentjourneyId == 0
-          ? Text('no journey selected')
-          : weightAndPics.isEmpty
-              ? Text('no data yet in journey $currentjourneyId')
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      // color: Colors.blueGrey[50],
-                      child: onlyOnePic
-                          ? OneImage(
-                              weightAndPics[firstPicindex].weight,
-                            )
-                          : TwoImages(
-                              firstImageWeight:
-                                  weightAndPics[firstPicindex].weight,
-                            ),
-                      //  color: Colors.blueGrey[100],
-                    ),
-                    CircleWidget(weightAndPics),
-                    RunningMan(
-                      currentWeight: weightAndPics.last.weight,
-                      startingWeight: weightAndPics.first.weight,
-                    )
-                  ],
-                ),
-    );
+    return !isInitialized
+        ? CircularProgressIndicator()
+        : SingleChildScrollView(
+            child: currentjourneyId == 0
+                ? Text('no journey selected')
+                : weightAndPics.isEmpty
+                    ? Text('no data yet in journey $currentjourneyId')
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            // color: Colors.blueGrey[50],
+                            child: onlyOnePic
+                                ? OneImage(
+                                    weightAndPics[firstPicindex].weight, units)
+                                : TwoImages(
+                                    firstImageWeight:
+                                        weightAndPics[firstPicindex].weight,
+                                    units: units,
+                                  ),
+                            //  color: Colors.blueGrey[100],
+                          ),
+                          CircleWidget(weightAndPics, units),
+                          RunningMan(
+                            journey: journey,
+                            currentWeight: weightAndPics.last.weight,
+                            startingWeight: weightAndPics.first.weight,
+                          )
+                        ],
+                      ),
+          );
   }
 
   String formatWeight(num weight) {}

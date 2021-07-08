@@ -3,7 +3,8 @@ import 'package:intl/intl.dart';
 
 class OneImage extends StatelessWidget {
   num firstImageWeight;
-  OneImage(this.firstImageWeight);
+  OneImage(this.firstImageWeight, this.units);
+  String units;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,7 @@ class OneImage extends StatelessWidget {
                           fontSize: 30 * ratio,
                           fontWeight: FontWeight.w900)),
                   TextSpan(
-                      text: 'kg',
+                      text: units,
                       style: TextStyle(
                           color: Colors.blueGrey[300],
                           fontStyle: FontStyle.italic,

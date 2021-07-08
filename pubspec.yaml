@@ -25,13 +25,21 @@ dependencies:
     sdk: flutter
   image_picker: ^0.8.0+3  
   provider: ^5.0.0
+  share: ^2.0.4
   sqflite: ^2.0.0+3
   path: ^1.8.0
   numberpicker: ^2.1.1
   shared_preferences: ^2.0.6
   intl: ^0.17.0
+  carousel_slider: ^4.0.0
   toggle_switch: ^1.1.0
   percent_indicator: ^3.0.1
+  animations: ^2.0.0
+  flutter_staggered_animations: ^1.0.0
+  flutter_staggered_grid_view: ^0.4.0
+  photo_view: ^0.11.1
+  syncfusion_flutter_charts: ^19.2.44+1
+  syncfusion_flutter_sliders: ^19.2.44
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -55,7 +63,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - ./lib/assets/nnn.jpeg
+    - ./lib/assets/ooo1.jpeg
     - ./lib/assets/ooo.jpeg
     - ./lib/assets/mmm.png
   

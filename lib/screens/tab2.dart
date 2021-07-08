@@ -3,6 +3,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wlbaf/providers/providers.dart';
+import 'package:wlbaf/screens/photo_gallery.dart';
 import '../models/modelClasses.dart';
 import 'package:intl/intl.dart';
 
@@ -34,7 +35,7 @@ class _Tab2State extends State<Tab2> {
   void didChangeDependencies() {
     if (!initialized) {
       weightAndPics = Provider.of<WeightAndPicturesData>(context, listen: false)
-          .weightAndPicList;
+          .weightAndPics;
       journey = Provider.of<JourneysData>(context, listen: false).journey;
       _sharedPreferences =
           Provider.of<SharedPreferencesData>(context, listen: false).prefs;
@@ -76,7 +77,8 @@ class _Tab2State extends State<Tab2> {
   num percentage;
   num percentCalculator(num startingWeight, num currentWeight) {
     num targetWeight = journey.targetWeight;
-    bool weightLoss = journey.weightLoss;
+    bool weightLoss = startingWeight >= targetWeight; //journey.weightLoss;
+
     if (weightLoss) {
       print('1weightLoss $weightLoss');
       percentage =
@@ -106,11 +108,13 @@ class _Tab2State extends State<Tab2> {
 
   @override
   Widget build(BuildContext context) {
+    String units = Provider.of<UnitsData>(context).units;
+
     currentjourneyId = Provider.of<CurrentJourney>(context).currentJourneyId;
-    weightAndPics =
-        Provider.of<WeightAndPicturesData>(context).weightAndPicList;
+    weightAndPics = Provider.of<WeightAndPicturesData>(context).weightAndPics;
     percentage = percentCalculator(
         weightAndPics.first.weight, weightAndPics.last.weight);
+    int length = weightAndPics.length;
     double ratio = MediaQuery.of(context).size.height / 896;
     return SingleChildScrollView(
       child: Container(
@@ -190,6 +194,7 @@ class _Tab2State extends State<Tab2> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  //  if (length > 1)
                   Container(
                     child: Column(
                       children: [
@@ -210,7 +215,7 @@ class _Tab2State extends State<Tab2> {
                                   fontWeight: FontWeight.w900),
                               children: <TextSpan>[
                                 TextSpan(
-                                    text: 'kg',
+                                    text: units,
                                     style: TextStyle(
                                         color: Colors.blueGrey[400],
                                         fontStyle: FontStyle.italic,
@@ -241,7 +246,7 @@ class _Tab2State extends State<Tab2> {
                                   fontWeight: FontWeight.w900),
                               children: <TextSpan>[
                                 TextSpan(
-                                    text: 'kg',
+                                    text: units,
                                     style: TextStyle(
                                         color:
                                             Colors.cyan, //Colors.blueGrey[400],
@@ -288,7 +293,7 @@ class _Tab2State extends State<Tab2> {
                                   fontWeight: FontWeight.w900),
                               children: <TextSpan>[
                                 TextSpan(
-                                    text: 'kg',
+                                    text: units,
                                     style: TextStyle(
                                         color: Colors.blueGrey[500],
                                         fontStyle: FontStyle.italic,
@@ -303,74 +308,84 @@ class _Tab2State extends State<Tab2> {
               ),
             ),
 
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.cyan,
-                borderRadius: BorderRadius.circular(11),
-              ),
-              padding: EdgeInsets.symmetric(
-                  vertical: 20 * ratio, horizontal: 22 * ratio),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed('/JourneyMonthScreen');
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.cyan,
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                padding: EdgeInsets.symmetric(
+                    vertical: 20 * ratio, horizontal: 22 * ratio),
 //color: Colors.cyan,
-              margin: EdgeInsets.only(
-                top: 20 * ratio,
-                left: 15 * ratio,
-                right: 15 * ratio,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Spacer(),
-                  Text('Journey so far !',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontStyle: FontStyle.italic,
-                          fontSize: 20 * ratio,
-                          fontWeight: FontWeight.bold)),
-                  SizedBox(
-                    width: 12,
-                  ),
-                  Icon(
-                    Icons.pedal_bike_sharp,
-                    color: Colors.white,
-                    size: 33 * ratio,
-                  ),
-                  Spacer(),
-                ],
+                margin: EdgeInsets.only(
+                  top: 20 * ratio,
+                  left: 15 * ratio,
+                  right: 15 * ratio,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Spacer(),
+                    Text('Journey so far !',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontStyle: FontStyle.italic,
+                            fontSize: 20 * ratio,
+                            fontWeight: FontWeight.bold)),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Icon(
+                      Icons.pedal_bike_sharp,
+                      color: Colors.white,
+                      size: 33 * ratio,
+                    ),
+                    Spacer(),
+                  ],
+                ),
               ),
             ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.cyan,
-                borderRadius: BorderRadius.circular(11),
-              ),
-              padding: EdgeInsets.symmetric(
-                  vertical: 20 * ratio, horizontal: 22 * ratio),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(PhotoGallery.routeName);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.cyan,
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                padding: EdgeInsets.symmetric(
+                    vertical: 20 * ratio, horizontal: 22 * ratio),
 //color: Colors.cyan,
-              margin: EdgeInsets.only(
-                top: 20 * ratio,
-                left: 15 * ratio,
-                right: 15 * ratio,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Spacer(),
-                  Icon(
-                    Icons.image,
-                    color: Colors.white,
-                    size: 33 * ratio,
-                  ),
-                  SizedBox(
-                    width: 12 * ratio,
-                  ),
-                  Text('Photo gallery ',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontStyle: FontStyle.italic,
-                          fontSize: 20 * ratio,
-                          fontWeight: FontWeight.bold)),
-                  Spacer(),
-                ],
+                margin: EdgeInsets.only(
+                  top: 20 * ratio,
+                  left: 15 * ratio,
+                  right: 15 * ratio,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Spacer(),
+                    Icon(
+                      Icons.image,
+                      color: Colors.white,
+                      size: 33 * ratio,
+                    ),
+                    SizedBox(
+                      width: 12 * ratio,
+                    ),
+                    Text('Photo gallery ',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontStyle: FontStyle.italic,
+                            fontSize: 20 * ratio,
+                            fontWeight: FontWeight.bold)),
+                    Spacer(),
+                  ],
+                ),
               ),
             ),
             !initialized

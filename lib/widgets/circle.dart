@@ -4,14 +4,17 @@ import 'package:intl/intl.dart';
 
 class CircleWidget extends StatelessWidget {
   List<WeightAndPic> weightAndPics;
-  CircleWidget(this.weightAndPics);
-
+  CircleWidget(this.weightAndPics, this.units);
+  String units;
   @override
   Widget build(BuildContext context) {
-    int dayCount = DateTime.parse(weightAndPics.last.dateTime)
-            .difference(DateTime.parse(weightAndPics.first.dateTime))
-            .inDays +
+    int dayCount = (DateTime.parse(weightAndPics.last.dateTime)
+                    .difference(DateTime.parse(weightAndPics.first.dateTime))
+                    .inHours /
+                24)
+            .round() +
         1;
+    print('dayCount $dayCount');
     double ratio = MediaQuery.of(context).size.height / 896;
     return Container(
       margin: EdgeInsets.symmetric(vertical: 25 * ratio),
@@ -56,7 +59,7 @@ class CircleWidget extends StatelessWidget {
                       fontWeight: FontWeight.w900),
                   children: <TextSpan>[
                     TextSpan(
-                        text: 'kg',
+                        text: units,
                         style: TextStyle(
                             color: Colors.blueGrey[900],
                             fontStyle: FontStyle.italic,

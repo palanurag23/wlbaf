@@ -46,7 +46,7 @@ class _TabsScreenState extends State<TabsScreen> {
   void didChangeDependencies() {
     if (!isInitialized) {
       weightAndPics = Provider.of<WeightAndPicturesData>(context, listen: false)
-          .weightAndPicList;
+          .weightAndPics;
       print('weightAndPics.isempty' + weightAndPics.isEmpty.toString());
       weightListEmpty = weightAndPics.isEmpty;
       weightAddedToday = weightListEmpty
@@ -54,9 +54,11 @@ class _TabsScreenState extends State<TabsScreen> {
           : DateFormat('dd/MM/yy').format(DateTime.now()) ==
               DateFormat('dd/MM/yy')
                   .format(DateTime.parse(weightAndPics.last.dateTime));
-      todaysDayCount = DateTime.now()
-              .difference(DateTime.parse(weightAndPics.first.dateTime))
-              .inDays +
+      todaysDayCount = ((DateTime.now()
+                      .difference(DateTime.parse(weightAndPics.first.dateTime))
+                      .inHours) /
+                  24)
+              .round() +
           1;
       setState(() {
         isInitialized = true;
@@ -77,14 +79,15 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    weightAndPics = Provider.of<WeightAndPicturesData>(context, listen: true)
-        .weightAndPicList;
+    weightAndPics =
+        Provider.of<WeightAndPicturesData>(context, listen: true).weightAndPics;
     weightListEmpty = weightAndPics.isEmpty;
     weightAddedToday = weightListEmpty
         ? false
         : DateFormat('dd/MM/yy').format(DateTime.now()) ==
             DateFormat('dd/MM/yy')
                 .format(DateTime.parse(weightAndPics.last.dateTime));
+    print('Weight added today $weightAddedToday');
     return WillPopScope(
       onWillPop: () async {
         await SystemNavigator.pop();
@@ -178,7 +181,9 @@ class _TabsScreenState extends State<TabsScreen> {
           backgroundColor: Colors.pinkAccent, //Theme.of(context).accentColor,
           items: [
             BottomNavigationBarItem(
-              activeIcon: Icon(Icons.image),
+              activeIcon: Icon(
+                Icons.image,
+              ),
               backgroundColor:
                   Colors.blueGrey[900], //Theme.of(context).bottomAppBarColor,
               icon: Icon(Icons.image),
@@ -226,3 +231,4 @@ class _TabsScreenState extends State<TabsScreen> {
     );
   }
 }
+/* */
