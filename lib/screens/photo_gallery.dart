@@ -149,7 +149,10 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                           height: mediaQueryData.width * 0.24,
                           width: mediaQueryData.width * 0.24,
                           margin: EdgeInsets.all(1),
-                          child: Image.asset('./lib/assets/ooo1.jpeg')
+                          child: Image.file(
+                            File(photoWeightList[index].path),
+                            fit: BoxFit.cover,
+                          )
 
                           // Image.file(
                           //   File(
@@ -173,6 +176,19 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                           ),
                         ),
                       ),
+                      if (selectionModeActivated &&
+                          (!paths.contains(photoWeightList[index].path)))
+                        Positioned(
+                          top: 1,
+                          right: 1,
+                          child: Container(
+                            height: 15,
+                            width: 15,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black)),
+                            // color: Colors.transparent,
+                          ),
+                        ),
                       if (paths.contains(photoWeightList[index].path))
                         Positioned(
                           top: 0,
@@ -181,8 +197,8 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                               color: Colors.black,
                               child: Icon(
                                 Icons.check,
-                                size: 30,
-                                color: Colors.blue,
+                                size: 15,
+                                color: Colors.white,
                               )),
                         )
                     ],

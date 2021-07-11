@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -75,8 +75,8 @@ class _Tab3State extends State<Tab3> {
                                         semanticContainer: true,
                                         clipBehavior:
                                             Clip.antiAliasWithSaveLayer,
-                                        child: Image.asset(
-                                          './lib/assets/ooo1.jpeg',
+                                        child: Image.file(
+                                          File(snapshot.data[itemIndex].path),
                                           fit: BoxFit.cover,
                                         ),
                                         shape: RoundedRectangleBorder(
@@ -149,9 +149,9 @@ class _Tab3State extends State<Tab3> {
                                     enableInfiniteScroll: true,
                                     reverse: false,
                                     autoPlay: autoPlay,
-                                    autoPlayInterval: Duration(seconds: 1),
+                                    autoPlayInterval: Duration(seconds: 3),
                                     autoPlayAnimationDuration:
-                                        Duration(milliseconds: 199),
+                                        Duration(milliseconds: 1000),
                                     autoPlayCurve: Curves.fastOutSlowIn,
                                     enlargeCenterPage: true,
                                     // onPageChanged: callbackFunction,

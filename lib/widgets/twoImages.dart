@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:io' as io;
 
 class TwoImages extends StatefulWidget {
   num firstImageWeight;
   String units;
+  String path1;
+  String path2;
 
-  TwoImages({this.firstImageWeight, this.units});
+  TwoImages({this.firstImageWeight, this.units, this.path1, this.path2});
 
   @override
   _TwoImagesState createState() => _TwoImagesState();
@@ -57,9 +60,9 @@ class _TwoImagesState extends State<TwoImages> {
                     padding: EdgeInsets.symmetric(vertical: 0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(11),
-                      child: Image.asset(
+                      child: Image.file(
                         //'./lib/assets/mmm.png',
-                        './lib/assets/ooo1.jpeg',
+                        io.File(widget.path1),
                         fit: BoxFit.cover,
                       ),
                     )
@@ -75,16 +78,16 @@ class _TwoImagesState extends State<TwoImages> {
                     text: NumberFormat("###.#").format(widget.firstImageWeight),
                     style: TextStyle(
                         color: Colors.blueGrey[300],
-                        fontStyle: FontStyle.italic,
-                        fontSize: 30 * ratio,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 20 * ratio,
                         fontWeight: FontWeight.w900),
                     children: <TextSpan>[
                       TextSpan(
-                          text: widget.units,
+                          text: ' ' + widget.units,
                           style: TextStyle(
                               color: Colors.blueGrey[300],
                               fontStyle: FontStyle.italic,
-                              fontSize: 20 * ratio,
+                              fontSize: 10 * ratio,
                               fontWeight: FontWeight.bold))
                     ]),
               ),
@@ -119,9 +122,9 @@ class _TwoImagesState extends State<TwoImages> {
                   padding: EdgeInsets.symmetric(vertical: 0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(11),
-                    child: Image.asset(
+                    child: Image.file(
                       //'./lib/assets/mmm.png',
-                      './lib/assets/ooo1.jpeg',
+                      io.File(widget.path2),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -136,10 +139,10 @@ class _TwoImagesState extends State<TwoImages> {
                   //weightAndPics[firstPicindex].path,
                   style: TextStyle(
                       color: Colors.blueGrey[300],
-                      fontWeight: FontWeight.w900,
-                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w700,
+                      fontStyle: FontStyle.normal,
                       fontFamily: 'Open Sans',
-                      fontSize: 30 * ratio)),
+                      fontSize: 20 * ratio)),
             ],
           )
         ],

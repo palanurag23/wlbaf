@@ -241,7 +241,7 @@ class _Tab2State extends State<Tab2> {
                                   .format(weightAndPics.last.weight),
                               style: TextStyle(
                                   color: Colors.cyan, //Colors.blueGrey[900],
-                                  fontStyle: FontStyle.italic,
+                                  fontStyle: FontStyle.normal,
                                   fontSize: 40 * ratio,
                                   fontWeight: FontWeight.w900),
                               children: <TextSpan>[
@@ -332,7 +332,7 @@ class _Tab2State extends State<Tab2> {
                     Text('Journey so far !',
                         style: TextStyle(
                             color: Colors.white,
-                            fontStyle: FontStyle.italic,
+                            fontStyle: FontStyle.normal,
                             fontSize: 20 * ratio,
                             fontWeight: FontWeight.bold)),
                     SizedBox(
@@ -380,7 +380,7 @@ class _Tab2State extends State<Tab2> {
                     Text('Photo gallery ',
                         style: TextStyle(
                             color: Colors.white,
-                            fontStyle: FontStyle.italic,
+                            fontStyle: FontStyle.normal,
                             fontSize: 20 * ratio,
                             fontWeight: FontWeight.bold)),
                     Spacer(),

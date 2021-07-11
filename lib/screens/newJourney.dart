@@ -27,7 +27,7 @@ class _AddNewJourneyState extends State<AddNewJourney> {
   int duration = 1;
   bool isInitialized = false;
   bool addImage = false;
-  int step1and2 = 1;
+  int steps = 5;
   GlobalKey materialNavigatorKey;
   @override
   void initState() {
@@ -164,20 +164,20 @@ class _AddNewJourneyState extends State<AddNewJourney> {
 
     return Scaffold(
       persistentFooterButtons: [
-        if (step1and2 == 2)
+        if (steps > 1)
           IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
                 setState(() {
-                  step1and2 = 1;
+                  steps = steps - 1;
                 });
               }),
-        Spacer(),
-        step1and2 == 1
+        // Spacer(),
+        steps < 5
             ? ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    step1and2 = 2;
+                    steps = steps + 1;
                   });
                 },
                 child: Text('next '))
@@ -207,7 +207,7 @@ class _AddNewJourneyState extends State<AddNewJourney> {
                             false,
                             _currentGoalValue <= _currentWeightValue);
                     print('journey savrd');
-
+                    await Future.delayed(Duration(seconds: 1)); ////
                     await Provider.of<WeightAndPicturesData>(context,
                             listen: false)
                         .addWeightAndPic(
@@ -226,291 +226,317 @@ class _AddNewJourneyState extends State<AddNewJourney> {
                         backgroundColor: Colors.blueGrey[700],
                         content: Text('New Journey Started !')));
 
-                    Navigator.of(context).pushNamed('/Tabs_screen');
+                    Navigator.of(context).pushReplacementNamed('/Tabs_screen');
                   }
                 },
                 icon: Icon(Icons.save),
                 label: Text('Save $journeyId'))
       ],
       appBar: AppBar(
-        title: Text('AddNewJourney'),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text('Starting weight loss journey !',
+            style: TextStyle(
+                color: Colors.blueGrey[500],
+                fontStyle: FontStyle.italic,
+                fontSize: 20 * ratio,
+                fontWeight: FontWeight.w800)),
       ),
       body: SingleChildScrollView(
-        child: step1and2 == 1
-            ? Column(
-                children: [
-                  SizedBox(
-                    height: 22 * ratio,
-                  ),
+          child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 22 * ratio,
+            ),
 
-                  SizedBox(
-                    height: 22 * ratio,
-                  ),
-                  _image == null
-                      ? GestureDetector(
-                          onTap: () async {
-                            await _showPicker(context, ratio);
-                          },
-                          child: Card(
-                            elevation: 2,
-                            semanticContainer: true,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                            child: Container(
-                              color: Colors.blueGrey[50],
-                              width: size.width * 0.4,
-                              child: Center(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.add_a_photo_outlined,
-                                      size: 40,
-                                      color: Colors.blueGrey[300],
-                                    ),
-                                    Text('Add picture',
-                                        style: TextStyle(
-                                            color: Colors.blueGrey[300],
-                                            fontStyle: FontStyle.italic,
-                                            fontSize: 20 * ratio,
-                                            fontWeight: FontWeight.w900))
-                                  ],
-                                ),
+            //  if (steps == 1)
+            Container(
+                child: _image == null
+                    ? GestureDetector(
+                        onTap: () async {
+                          await _showPicker(context, ratio);
+                        },
+                        child: Card(
+                          elevation: 0,
+                          semanticContainer: true,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          child: Container(
+                            color: Colors.blueGrey[50],
+                            width: size.width * 0.7,
+                            child: Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.add_a_photo_outlined,
+                                    size: 25,
+                                    color: Colors.blueGrey[300],
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text('Add picture',
+                                      style: TextStyle(
+                                          color: Colors.blueGrey[700],
+                                          fontStyle: FontStyle.normal,
+                                          fontSize: 15 * ratio,
+                                          fontWeight: FontWeight.w500))
+                                ],
                               ),
-                              height: size.width * 0.5,
                             ),
+                            height: size.width * 0.8,
                           ),
-                        )
-                      : Stack(
-                          children: [
-                            Container(
-                              width: size.width * 0.5,
-                              child: Card(
-                                  elevation: 2,
-                                  semanticContainer: true,
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0)),
-                                  child: Image.file(_image)),
-                            ),
-                            Positioned(
-                                child: IconButton(
-                              icon: Icon(
-                                Icons.cancel_rounded,
-                                color: Colors.white,
-                                size: 30,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _image = null;
-                                  addImage = false;
-                                });
-                              },
-                            ))
-                          ],
                         ),
+                      )
+                    : Stack(
+                        children: [
+                          Container(
+                            height: size.width * 0.8,
+                            width: size.width * 0.7,
+                            child: Card(
+                                elevation: 2,
+                                semanticContainer: true,
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                child: Image.file(
+                                  _image,
+                                  fit: BoxFit.cover,
+                                )),
+                          ),
+                          Positioned(
+                              top: 0,
+                              right: 0,
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.cancel_rounded,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _image = null;
+                                    addImage = false;
+                                  });
+                                },
+                              ))
+                        ],
+                      )),
 
+            // if (steps == 2)
+            Container(
+              margin: EdgeInsets.only(top: 35 * ratio, left: 40, right: 40),
+              padding: EdgeInsets.only(
+                top: 20 * ratio, bottom: 20,
+                //left: 20, right: 20
+              ),
+              decoration: BoxDecoration(
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: Colors.grey[400],
+                //     offset: Offset(1, 3), //(x,y)
+                //     blurRadius: 2.0,
+                //   ),
+                // ],
+                // border: Border.all(color: Colors.black, width: 1),
+                color: Colors.blueGrey[50],
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(11),
+              ),
+              child: Column(
+                children: [
                   Container(
-                    margin:
-                        EdgeInsets.only(top: 35 * ratio, left: 40, right: 40),
-                    padding: EdgeInsets.only(
-                        top: 30 * ratio, bottom: 50, left: 20, right: 20),
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey[400],
-                          offset: Offset(1, 3), //(x,y)
-                          blurRadius: 2.0,
-                        ),
-                      ],
-                      // border: Border.all(color: Colors.black, width: 1),
-                      color: Colors.blueGrey[50],
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(31),
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          // color: Colors.blueGrey,
-                          margin: EdgeInsets.only(top: 0),
-                          child: Text('Your current weight', //+
-                              //weightAndPics[firstPicindex].path,
+                    // color: Colors.blueGrey,
+                    margin: EdgeInsets.only(top: 0),
+                    child: Text('Your Weight !', //+
+                        //weightAndPics[firstPicindex].path,
+                        style: TextStyle(
+                            color: Colors.blueGrey[500],
+                            fontWeight: FontWeight.w800,
+                            fontStyle: FontStyle.normal,
+                            fontFamily: 'Open Sans',
+                            fontSize: 20 * ratio)),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Divider(
+                    color: Colors.blueGrey[300],
+                  ),
+                  RichText(
+                    text: TextSpan(
+                        text: NumberFormat("###.#").format(_currentWeightValue),
+                        style: TextStyle(
+                            color: Colors.blueGrey[700],
+                            fontStyle: FontStyle.normal,
+                            fontSize: 20 * ratio,
+                            fontWeight: FontWeight.w500),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: ' ' + ['kg', 'lb'][initialLabelIndex],
                               style: TextStyle(
                                   color: Colors.blueGrey[500],
-                                  fontWeight: FontWeight.w700,
-                                  fontStyle: FontStyle.italic,
-                                  fontFamily: 'Open Sans',
-                                  fontSize: 20 * ratio)),
-                        ),
-                        RichText(
-                          text: TextSpan(
-                              text: NumberFormat("###.#")
-                                  .format(_currentWeightValue),
-                              style: TextStyle(
-                                  color: Colors.blueGrey[700],
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: 50 * ratio,
-                                  fontWeight: FontWeight.w900),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: ['kg', 'lb'][initialLabelIndex],
-                                    style: TextStyle(
-                                        color: Colors.blueGrey[500],
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: 15 * ratio,
-                                        fontWeight: FontWeight.bold))
-                              ]),
-                        ),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        ToggleSwitch(
-                          minWidth: 90.0,
-                          cornerRadius: 20.0,
-                          activeBgColors: [
-                            [Colors.blueGrey[300], Colors.blueGrey[300]],
-                            [Colors.blueGrey[300], Colors.blueGrey[300]]
-                          ],
-                          activeFgColor: Colors.white,
-                          inactiveBgColor: Colors.blueGrey[100],
-                          inactiveFgColor: Colors.blueGrey,
-                          initialLabelIndex: initialLabelIndex,
-                          totalSwitches: 2,
-                          labels: ['kg', 'lb'],
-                          radiusStyle: true,
-                          onToggle: (index) {
-                            setState(() {
-                              initialLabelIndex = index;
-                            });
-                            Provider.of<UnitsData>(context, listen: false)
-                                .set(['kg', 'lb'][index], context);
-                            print('switched to: $index');
-                          },
-                        ),
-                        Divider(),
-                        DecimalNumberPicker(
-                          textStyle: TextStyle(
-                              color: Colors.blueGrey[200],
-                              fontStyle: FontStyle.italic,
-                              fontSize: 20 * ratio,
-                              fontWeight: FontWeight.w600),
-                          selectedTextStyle: TextStyle(
-                              color: Colors.blueGrey[500],
-                              fontStyle: FontStyle.italic,
-                              fontSize: 30 * ratio,
-                              fontWeight: FontWeight.w600),
-                          integerDecoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(33),
-                            border: Border.all(color: Colors.grey[400]),
-                          ),
-                          decimalDecoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(33),
-                            border: Border.all(color: Colors.grey[400]),
-                          ),
-                          value: _currentWeightValue,
-                          minValue: 0,
-                          maxValue: 1000,
-                          onChanged: (value) =>
-                              setState(() => _currentWeightValue = value),
-                        ),
-                      ],
-                    ),
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: 12 * ratio,
+                                  fontWeight: FontWeight.bold))
+                        ]),
                   ),
-                  // Text('goal'),
-                ],
-              )
-            : Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.blueGrey[50],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: EdgeInsets.only(
-                        top: 5 * ratio,
-                        left: 22 * ratio,
-                        right: 22 * ratio,
-                        bottom: 5 * ratio),
-//color: Colors.cyan,
-                    margin: EdgeInsets.only(
-                      top: 20 * ratio,
-                      left: 15 * ratio,
-                      right: 15 * ratio,
-                    ),
-                    child: TextField(
-                        scrollPadding: EdgeInsets.all(0),
-                        maxLength: 20,
-                        onChanged: (String note) {
-                          //     print(note);
-                          print(_noteController.text);
-                        },
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.blueGrey[400],
-                            fontStyle: FontStyle.normal,
-                            fontSize: 15 * ratio,
-                            fontWeight: FontWeight.w500),
-                        decoration: InputDecoration(
-                          hintStyle: TextStyle(
-                              color: Colors.blueGrey[400],
-                              fontStyle: FontStyle.normal,
-                              fontSize: 15 * ratio,
-                              fontWeight: FontWeight.w500),
-                          hintText: 'Title for this journey',
-                          border: InputBorder.none,
-                          labelStyle: TextStyle(color: Colors.white),
-                        ),
-                        autofocus: false,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        controller: _noteController),
+                  Divider(
+                    color: Colors.white,
+                    thickness: 1,
                   ),
-                  Container(
-                    margin:
-                        EdgeInsets.only(top: 35 * ratio, left: 40, right: 40),
-                    padding: EdgeInsets.only(
-                        top: 30 * ratio, bottom: 50, left: 20, right: 20),
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey[400],
-                          offset: Offset(1, 3), //(x,y)
-                          blurRadius: 2.0,
-                        ),
-                      ],
-                      // border: Border.all(color: Colors.black, width: 1),
-                      color: Colors.blueGrey[50],
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(31),
+                  DecimalNumberPicker(
+                    textStyle: TextStyle(
+                        color: Colors.blueGrey[200],
+                        fontStyle: FontStyle.normal,
+                        fontSize: 15 * ratio,
+                        fontWeight: FontWeight.w600),
+                    selectedTextStyle: TextStyle(
+                        color: Colors.blueGrey[700],
+                        fontStyle: FontStyle.normal,
+                        fontSize: 20 * ratio,
+                        fontWeight: FontWeight.w600),
+                    integerDecoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(33),
+                      border: Border.all(color: Colors.white),
                     ),
-                    child: Column(
-                      children: [
-                        NumberPicker(
-                            minValue: 0,
-                            axis: Axis.vertical,
-                            maxValue: 450,
-                            value: _currentGoalValue,
-                            onChanged: (value) =>
-                                setState(() => _currentGoalValue = value)),
-                      ],
+                    decimalDecoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(33),
+                      border: Border.all(color: Colors.white),
                     ),
+                    value: _currentWeightValue,
+                    minValue: 0,
+                    maxValue: 1000,
+                    onChanged: (value) =>
+                        setState(() => _currentWeightValue = value),
                   ),
-                  Text('duration'),
-                  //DURATION
-                  NumberPicker(
-                      axis: Axis.horizontal,
-                      minValue: 1,
-                      maxValue: 52,
-                      value: duration,
-                      onChanged: (value) => setState(() => duration = value)),
-                  _image == null
-                      ? Text('No image selected.')
-                      : Image.file(_image),
+                  Divider(
+                    color: Colors.blueGrey[300],
+                  ),
+                  ToggleSwitch(
+                    minWidth: 50.0,
+                    minHeight: 30,
+                    cornerRadius: 20.0,
+                    activeBgColors: [
+                      [Colors.blueGrey[300], Colors.blueGrey[300]],
+                      [Colors.blueGrey[300], Colors.blueGrey[300]]
+                    ],
+                    activeFgColor: Colors.white,
+                    inactiveBgColor: Colors.blueGrey[100],
+                    inactiveFgColor: Colors.blueGrey,
+                    initialLabelIndex: initialLabelIndex,
+                    totalSwitches: 2,
+                    labels: ['kg', 'lb'],
+                    radiusStyle: true,
+                    onToggle: (index) {
+                      setState(() {
+                        initialLabelIndex = index;
+                      });
+                      Provider.of<UnitsData>(context, listen: false)
+                          .set(['kg', 'lb'][index], context);
+                      print('switched to: $index');
+                    },
+                  ),
                 ],
               ),
-      ),
+            ),
+            //    if (steps == 1)
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.blueGrey[50],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: EdgeInsets.only(
+                  top: 5 * ratio,
+                  left: 22 * ratio,
+                  right: 22 * ratio,
+                  bottom: 5 * ratio),
+//color: Colors.cyan,
+              margin: EdgeInsets.only(
+                top: 20 * ratio,
+                left: 15 * ratio,
+                right: 15 * ratio,
+              ),
+              child: TextField(
+                  scrollPadding: EdgeInsets.all(0),
+                  maxLength: 20,
+                  onChanged: (String note) {
+                    //     print(note);
+                    print(_noteController.text);
+                  },
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.blueGrey[400],
+                      fontStyle: FontStyle.normal,
+                      fontSize: 15 * ratio,
+                      fontWeight: FontWeight.w500),
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(
+                        color: Colors.blueGrey[400],
+                        fontStyle: FontStyle.normal,
+                        fontSize: 15 * ratio,
+                        fontWeight: FontWeight.w500),
+                    hintText: 'Title for this journey',
+                    border: InputBorder.none,
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                  autofocus: false,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  controller: _noteController),
+            ),
+            //    if (steps == 4)
+            Container(
+              margin: EdgeInsets.only(top: 35 * ratio, left: 40, right: 40),
+              padding: EdgeInsets.only(
+                  top: 30 * ratio, bottom: 50, left: 20, right: 20),
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey[400],
+                    offset: Offset(1, 3), //(x,y)
+                    blurRadius: 2.0,
+                  ),
+                ],
+                // border: Border.all(color: Colors.black, width: 1),
+                color: Colors.blueGrey[50],
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(31),
+              ),
+              child: Column(
+                children: [
+                  NumberPicker(
+                      minValue: 0,
+                      axis: Axis.vertical,
+                      maxValue: 450,
+                      value: _currentGoalValue,
+                      onChanged: (value) =>
+                          setState(() => _currentGoalValue = value)),
+                ],
+              ),
+            ),
+            // Text('duration'),
+            //DURATION
+            // if (steps == 5)
+            NumberPicker(
+                axis: Axis.horizontal,
+                minValue: 1,
+                maxValue: 52,
+                value: duration,
+                onChanged: (value) => setState(() => duration = value)),
+            //   _image == null ? Text('No image selected.') : Image.file(_image),
+            SizedBox(
+              height: 0,
+            ),
+            // Text('goal'),
+          ],
+        ),
+      )),
     );
   }
 }

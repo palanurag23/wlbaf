@@ -41,10 +41,10 @@ class CircleWidget extends StatelessWidget {
                 //weightAndPics[firstPicindex].path,
                 style: TextStyle(
                     color: Colors.blueGrey[300],
-                    fontWeight: FontWeight.w900,
-                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w700,
+                    fontStyle: FontStyle.normal,
                     fontFamily: 'Open Sans',
-                    fontSize: 30 * ratio)),
+                    fontSize: 25 * ratio)),
           ),
           Container(
             // color: Colors.amber,
@@ -54,16 +54,16 @@ class CircleWidget extends StatelessWidget {
                   text: NumberFormat("###.#").format(weightAndPics.last.weight),
                   style: TextStyle(
                       color: Colors.blueGrey[900],
-                      fontStyle: FontStyle.italic,
-                      fontSize: 50 * ratio,
+                      fontStyle: FontStyle.normal,
+                      fontSize: 30 * ratio,
                       fontWeight: FontWeight.w900),
                   children: <TextSpan>[
                     TextSpan(
-                        text: units,
+                        text: ' ' + units,
                         style: TextStyle(
                             color: Colors.blueGrey[900],
                             fontStyle: FontStyle.italic,
-                            fontSize: 20 * ratio,
+                            fontSize: 15 * ratio,
                             fontWeight: FontWeight.bold))
                   ]),
             ),

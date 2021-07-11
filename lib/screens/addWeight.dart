@@ -196,6 +196,7 @@ class _AddWeightState extends State<AddWeight> {
                   Navigator.of(context).pop();
                 },
           child: Container(
+            // color: Colors.amber,
             height: 50,
             padding: EdgeInsets.only(bottom: 0),
             child: Center(
@@ -299,29 +300,7 @@ class _AddWeightState extends State<AddWeight> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             // if (weightListEmpty)
-            ToggleSwitch(
-              minWidth: 90.0,
-              cornerRadius: 20.0,
-              activeBgColors: [
-                [Colors.blueGrey, Colors.blueGrey[800]],
-                [Colors.blueGrey[800], Colors.blueGrey]
-              ],
-              activeFgColor: Colors.white,
-              inactiveBgColor: Colors.blueGrey[200],
-              inactiveFgColor: Colors.white,
-              initialLabelIndex: initialLabelIndex,
-              totalSwitches: 2,
-              labels: ['kg', 'lb'],
-              radiusStyle: true,
-              onToggle: (index) {
-                setState(() {
-                  initialLabelIndex = index;
-                });
-                Provider.of<UnitsData>(context, listen: false)
-                    .set(['kg', 'lb'][index], context);
-                print('switched to: $index');
-              },
-            ),
+
             SizedBox(
               height: 22,
             ),
@@ -364,29 +343,42 @@ class _AddWeightState extends State<AddWeight> {
                 : Stack(
                     children: [
                       Container(
-                        width: size.width * 0.5,
+                        height: size.width * 0.8,
+                        width: size.width * 0.6,
                         child: Card(
                             elevation: 2,
                             semanticContainer: true,
                             clipBehavior: Clip.antiAliasWithSaveLayer,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0)),
-                            child: Image.file(_image)),
+                            child: Image.file(
+                              _image,
+                              fit: BoxFit.cover,
+                            )),
                       ),
                       Positioned(
+                          top: 0,
+                          right: 0,
                           child: IconButton(
-                        icon: Icon(
-                          Icons.cancel_rounded,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _image = null;
-                            addImage = false;
-                          });
-                        },
-                      ))
+                            icon: Icon(
+                              weightAndPics.length == 1 && weightAddedToday
+                                  ? Icons.replay_rounded
+                                  : Icons.cancel,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                            onPressed:
+                                weightAndPics.length == 1 && weightAddedToday
+                                    ? () {
+                                        _showPicker(context, ratio);
+                                      }
+                                    : () {
+                                        setState(() {
+                                          _image = null;
+                                          addImage = false;
+                                        });
+                                      },
+                          ))
                     ],
                   ),
             // Container(
@@ -423,85 +415,132 @@ class _AddWeightState extends State<AddWeight> {
             //     ? Text(weightAndPics.last.weight.toString())
             //     :
             Container(
-              margin: EdgeInsets.only(top: 35 * ratio, left: 40, right: 40),
+              margin: EdgeInsets.only(top: 15 * ratio, left: 40, right: 40),
               padding: EdgeInsets.only(
-                  top: 30 * ratio, bottom: 50, left: 20, right: 20),
+                  top: 10 * ratio, bottom: 10, left: 20, right: 20),
               decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey[400],
-                    offset: Offset(1, 3), //(x,y)
-                    blurRadius: 2.0,
-                  ),
-                ],
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: Colors.grey[400],
+                //     offset: Offset(1, 3), //(x,y)
+                //     blurRadius: 2.0,
+                //   ),
+                // ],
                 // border: Border.all(color: Colors.black, width: 1),
                 color: Colors.blueGrey[50],
                 shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(31),
+                borderRadius: BorderRadius.circular(11),
               ),
               child: Column(
                 children: [
                   Container(
                     // color: Colors.blueGrey,
                     margin: EdgeInsets.only(top: 0),
-                    child: Text('Day $dayCount', //+
-                        //weightAndPics[firstPicindex].path,
-                        style: TextStyle(
-                            color: Colors.blueGrey[500],
-                            fontWeight: FontWeight.w700,
-                            fontStyle: FontStyle.italic,
-                            fontFamily: 'Open Sans',
-                            fontSize: 20 * ratio)),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          weightAddedToday ? Icons.edit : Icons.add,
+                          color: Colors.blueGrey[300],
+                          size: 20,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text('Day - $dayCount', //+
+                            //weightAndPics[firstPicindex].path,
+                            style: TextStyle(
+                                color: Colors.blueGrey[500],
+                                fontWeight: FontWeight.w700,
+                                fontStyle: FontStyle.normal,
+                                fontFamily: 'Open Sans',
+                                fontSize: 20 * ratio)),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.blueGrey[300],
                   ),
                   RichText(
                     text: TextSpan(
                         text: NumberFormat("###.#").format(_currentValue),
                         style: TextStyle(
                             color: Colors.blueGrey[700],
-                            fontStyle: FontStyle.italic,
-                            fontSize: 50 * ratio,
-                            fontWeight: FontWeight.w900),
+                            fontStyle: FontStyle.normal,
+                            fontSize: 20 * ratio,
+                            fontWeight: FontWeight.w600),
                         children: <TextSpan>[
                           TextSpan(
-                              text: ['kg', 'lb'][initialLabelIndex],
+                              text: ' ' + ['kg', 'lb'][initialLabelIndex],
                               style: TextStyle(
                                   color: Colors.blueGrey[500],
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: 15 * ratio,
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: 12 * ratio,
                                   fontWeight: FontWeight.bold))
                         ]),
                   ),
-                  SizedBox(
-                    height: 12,
+                  Divider(
+                    color: Colors.white,
+                    // thickness: 1,
                   ),
-                  Divider(),
                   DecimalNumberPicker(
                     textStyle: TextStyle(
                         color: Colors.blueGrey[200],
-                        fontStyle: FontStyle.italic,
-                        fontSize: 20 * ratio,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 15 * ratio,
                         fontWeight: FontWeight.w600),
                     selectedTextStyle: TextStyle(
-                        color: Colors.blueGrey[500],
-                        fontStyle: FontStyle.italic,
-                        fontSize: 30 * ratio,
+                        color: Colors.blueGrey[700],
+                        fontStyle: FontStyle.normal,
+                        fontSize: 20 * ratio,
                         fontWeight: FontWeight.w600),
                     integerDecoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(33),
-                      border: Border.all(color: Colors.grey[400]),
+                      border: Border.all(color: Colors.white),
                     ),
                     decimalDecoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(33),
-                      border: Border.all(color: Colors.grey[400]),
+                      border: Border.all(color: Colors.white),
                     ),
                     value: _currentValue,
                     minValue: 0,
                     maxValue: 1000,
                     onChanged: (value) => setState(() => _currentValue = value),
                   ),
+                  Divider(
+                    color: Colors.blueGrey[300],
+                  ),
+                  ToggleSwitch(
+                    minWidth: 50.0,
+                    minHeight: 30.0,
+                    cornerRadius: 20.0,
+                    activeBgColors: [
+                      [Colors.blueGrey[300], Colors.blueGrey[300]],
+                      [Colors.blueGrey[300], Colors.blueGrey[300]]
+                    ],
+                    activeFgColor: Colors.white,
+                    inactiveBgColor: Colors.blueGrey[200],
+                    inactiveFgColor: Colors.white,
+                    initialLabelIndex: initialLabelIndex,
+                    totalSwitches: 2,
+                    labels: ['kg', 'lb'],
+                    radiusStyle: true,
+                    onToggle: (index) {
+                      setState(() {
+                        initialLabelIndex = index;
+                      });
+                      Provider.of<UnitsData>(context, listen: false)
+                          .set(['kg', 'lb'][index], context);
+                      print('switched to: $index');
+                    },
+                  ),
                 ],
               ),
             ),
+            SizedBox(
+              height: 22,
+            )
           ],
         ),
       ),

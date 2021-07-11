@@ -109,7 +109,7 @@ class _TabsScreenState extends State<TabsScreen> {
         body: !isInitialized
             ? CircularProgressIndicator()
             : AnimatedSwitcher(
-                duration: Duration(milliseconds: 00),
+                duration: Duration(milliseconds: 0),
                 transitionBuilder:
                     (Widget child, Animation<double> animation) =>
                         ScaleTransition(
@@ -151,6 +151,7 @@ class _TabsScreenState extends State<TabsScreen> {
           ),
         ),
         appBar: AppBar(
+          centerTitle: true,
           iconTheme: IconThemeData(),
           elevation: 0,
           backgroundColor: Colors.transparent,

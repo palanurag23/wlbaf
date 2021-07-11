@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:io' as io;
 
 class OneImage extends StatelessWidget {
   num firstImageWeight;
-  OneImage(this.firstImageWeight, this.units);
+  OneImage(this.firstImageWeight, this.path, this.units);
   String units;
-
+  String path;
   @override
   Widget build(BuildContext context) {
     double ratio = MediaQuery.of(context).size.height / 896;
@@ -16,7 +17,7 @@ class OneImage extends StatelessWidget {
       child: Column(
         children: [
           Container(
-              margin: EdgeInsets.only(bottom: 12 * ratio),
+              margin: EdgeInsets.only(bottom: 4 * ratio),
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
@@ -30,14 +31,15 @@ class OneImage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(11),
               ),
               //  height: 200,
-              width: width * 0.54,
+              width: width * 0.5,
+              height: width * 0.7,
               //   margin: EdgeInsets.only(bottom: 0),
               padding: EdgeInsets.symmetric(vertical: 0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(11),
-                child: Image.asset(
+                child: Image.file(
                   //'./lib/assets/mmm.png',
-                  './lib/assets/ooo.jpeg',
+                  io.File(path),
                   fit: BoxFit.cover,
                 ),
               )
@@ -49,10 +51,10 @@ class OneImage extends StatelessWidget {
               ),
           RichText(
             text: TextSpan(
-                text: 'Starting with ',
+                text: '', //'Starting with ',
                 style: TextStyle(
                     color: Colors.blueGrey[300],
-                    fontStyle: FontStyle.italic,
+                    fontStyle: FontStyle.normal,
                     fontSize: 20 * ratio,
                     fontWeight: FontWeight.w900),
                 children: <TextSpan>[
@@ -60,15 +62,15 @@ class OneImage extends StatelessWidget {
                       text: NumberFormat("###.#").format(firstImageWeight),
                       style: TextStyle(
                           color: Colors.blueGrey[300],
-                          fontStyle: FontStyle.italic,
-                          fontSize: 30 * ratio,
+                          fontStyle: FontStyle.normal,
+                          fontSize: 25 * ratio,
                           fontWeight: FontWeight.w900)),
                   TextSpan(
-                      text: units,
+                      text: ' ' + units,
                       style: TextStyle(
                           color: Colors.blueGrey[300],
-                          fontStyle: FontStyle.italic,
-                          fontSize: 20 * ratio,
+                          fontStyle: FontStyle.normal,
+                          fontSize: 15 * ratio,
                           fontWeight: FontWeight.bold))
                 ]),
           ),

@@ -1,3 +1,4 @@
+import 'dart:io' as io;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -25,9 +26,12 @@ class _MonthsWeightAndPicsScreenState extends State<MonthsWeightAndPicsScreen> {
   bool initialized = false;
   ScreenArguments args;
   String appBarTitle = '';
+  String units;
   @override
   void didChangeDependencies() {
     if (!initialized) {
+      units = Provider.of<UnitsData>(context, listen: false).units;
+
       args = ModalRoute.of(context).settings.arguments;
       id = Provider.of<CurrentJourney>(context, listen: false).get();
       weightAndPicList = args.list;
@@ -77,6 +81,7 @@ class _MonthsWeightAndPicsScreenState extends State<MonthsWeightAndPicsScreen> {
                         weightAndPicList[index].havePicture
                             ? Stack(children: [
                                 ImageCard(
+                                    units: units,
                                     index: index,
                                     pictureAndWeightList: pictureAndWeightList,
                                     element: weightAndPicList[index],
@@ -114,11 +119,12 @@ class _MonthsWeightAndPicsScreenState extends State<MonthsWeightAndPicsScreen> {
                                     color: Colors.white,
                                   ),
                                   top: 0,
-                                  right: 0,
+                                  left: 0,
                                 ),
                               ])
                             : Stack(children: [
                                 WithoutImageCard(
+                                    units: units,
                                     element: weightAndPicList[index],
                                     ratio: ratio,
                                     args: args),
@@ -172,6 +178,7 @@ class ImageCard extends StatelessWidget {
     @required this.pictureAndWeightList,
     @required this.ratio,
     @required this.element,
+    @required this.units,
     @required this.args,
     @required this.index,
   }) : super(key: key);
@@ -180,7 +187,7 @@ class ImageCard extends StatelessWidget {
   final double ratio;
   final int index;
   final ScreenArguments args;
-
+  final String units;
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -196,15 +203,10 @@ class ImageCard extends StatelessWidget {
           color: Colors.amber,
           semanticContainer: true,
           clipBehavior: Clip.antiAliasWithSaveLayer,
-          child: index / 2 == 0
-              ? Image.asset(
-                  './lib/assets/nnn.jpeg',
-                  fit: BoxFit.cover,
-                )
-              : Image.asset(
-                  './lib/assets/ooo.jpeg',
-                  fit: BoxFit.cover,
-                ),
+          child: Image.file(
+            io.File(element.path),
+            fit: BoxFit.cover,
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
@@ -225,12 +227,12 @@ class ImageCard extends StatelessWidget {
                       text: NumberFormat("###.#").format(element.weight),
                       style: TextStyle(
                           color: Colors.blueGrey[700],
-                          fontStyle: FontStyle.italic,
+                          fontStyle: FontStyle.normal,
                           fontSize: 15 * ratio,
                           fontWeight: FontWeight.w900),
                       children: <TextSpan>[
                         TextSpan(
-                            text: 'kg',
+                            text: ' ' + units,
                             style: TextStyle(
                                 color: Colors.blueGrey[400],
                                 fontStyle: FontStyle.italic,
@@ -243,7 +245,7 @@ class ImageCard extends StatelessWidget {
                       text: DateTime.parse(element.dateTime).day.toString(),
                       style: TextStyle(
                           color: Colors.blueGrey[700],
-                          fontStyle: FontStyle.italic,
+                          fontStyle: FontStyle.normal,
                           fontSize: 15 * ratio,
                           fontWeight: FontWeight.w900),
                       children: <TextSpan>[
@@ -251,7 +253,7 @@ class ImageCard extends StatelessWidget {
                             text: args.appBarTitle,
                             style: TextStyle(
                                 color: Colors.blueGrey[500],
-                                fontStyle: FontStyle.italic,
+                                fontStyle: FontStyle.normal,
                                 fontSize: 10 * ratio,
                                 fontWeight: FontWeight.bold))
                       ]),
@@ -274,10 +276,12 @@ class WithoutImageCard extends StatelessWidget {
     Key key,
     @required this.element,
     @required this.ratio,
+    @required this.units,
     @required this.args,
   }) : super(key: key);
 
   final double ratio;
+  final String units;
   final WeightAndPic element;
   final ScreenArguments args;
   @override
@@ -303,12 +307,12 @@ class WithoutImageCard extends StatelessWidget {
                     text: NumberFormat("###.#").format(element.weight),
                     style: TextStyle(
                         color: Colors.blueGrey[700],
-                        fontStyle: FontStyle.italic,
+                        fontStyle: FontStyle.normal,
                         fontSize: 20 * ratio,
                         fontWeight: FontWeight.w900),
                     children: <TextSpan>[
                       TextSpan(
-                          text: 'kg',
+                          text: ' ' + units,
                           style: TextStyle(
                               color: Colors.blueGrey[400],
                               fontStyle: FontStyle.italic,
@@ -321,7 +325,7 @@ class WithoutImageCard extends StatelessWidget {
                     text: DateTime.parse(element.dateTime).day.toString() + ' ',
                     style: TextStyle(
                         color: Colors.blueGrey[700],
-                        fontStyle: FontStyle.italic,
+                        fontStyle: FontStyle.normal,
                         fontSize: 15 * ratio,
                         fontWeight: FontWeight.w900),
                     children: <TextSpan>[
@@ -329,7 +333,7 @@ class WithoutImageCard extends StatelessWidget {
                           text: args.appBarTitle,
                           style: TextStyle(
                               color: Colors.blueGrey[500],
-                              fontStyle: FontStyle.italic,
+                              fontStyle: FontStyle.normal,
                               fontSize: 10 * ratio,
                               fontWeight: FontWeight.bold))
                     ]),

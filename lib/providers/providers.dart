@@ -74,7 +74,7 @@ class CurrentJourney with ChangeNotifier {
     await prefs.setInt('currentJourneyId', id);
 
     currentJourneyId = id;
-    Provider.of<JourneysData>(context, listen: false)
+    await Provider.of<JourneysData>(context, listen: false)
         .setJourney(currentJourneyId);
     //  imageCache.clear();
     if (shouldEmpty) {
@@ -138,7 +138,7 @@ class JourneysData with ChangeNotifier {
     print('$id');
     await prefs.setInt('currentJourneyId', id);
     await prefs.setInt('journeyCount', id);
-    Provider.of<CurrentJourney>(context, listen: false)
+    await Provider.of<CurrentJourney>(context, listen: false)
         .set(id, context, false, true);
     journey = Journey(
       durationInWeeks: durationInWeeks,

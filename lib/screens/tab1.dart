@@ -68,8 +68,13 @@ class _Tab1State extends State<Tab1> {
                             // color: Colors.blueGrey[50],
                             child: onlyOnePic
                                 ? OneImage(
-                                    weightAndPics[firstPicindex].weight, units)
+                                    weightAndPics[firstPicindex].weight,
+                                    weightAndPics[firstPicindex].path,
+                                    units,
+                                  )
                                 : TwoImages(
+                                    path1: weightAndPics[firstPicindex].path,
+                                    path2: weightAndPics[lastPicindex].path,
                                     firstImageWeight:
                                         weightAndPics[firstPicindex].weight,
                                     units: units,

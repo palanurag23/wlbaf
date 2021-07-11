@@ -1,3 +1,5 @@
+//adb connect 192.168.1.4:5555
+
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:provider/single_child_widget.dart';
