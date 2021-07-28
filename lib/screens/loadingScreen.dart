@@ -54,9 +54,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     Provider.of<WeightAndPicturesData>(context, listen: false)
             .weightAndPics
             .isEmpty
-        ? journeyList.isEmpty
-            ? Navigator.of(context).pushReplacementNamed('/AddNewJourney')
-            : Navigator.of(context).pushReplacementNamed('/JourneyListScreen')
+        ?
+        //journeyList.isEmpty
+        //  ?
+        Navigator.of(context).pushReplacementNamed('/AddNewJourney')
+        //: Navigator.of(context).pushReplacementNamed('/JourneyListScreen')
         : Navigator.of(context).pushReplacementNamed('/Tabs_screen');
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();

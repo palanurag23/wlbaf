@@ -2,6 +2,7 @@ import 'dart:io' as io;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:wlbaf/models/modelClasses.dart';
 import 'package:wlbaf/screens/GalleryViewScreen.dart';
@@ -27,6 +28,7 @@ class _MonthsWeightAndPicsScreenState extends State<MonthsWeightAndPicsScreen> {
   ScreenArguments args;
   String appBarTitle = '';
   String units;
+  bool lastDelete = false;
   @override
   void didChangeDependencies() {
     if (!initialized) {
@@ -67,107 +69,193 @@ class _MonthsWeightAndPicsScreenState extends State<MonthsWeightAndPicsScreen> {
                   fontSize: 22 * ratio,
                   fontWeight: FontWeight.w900)),
         ),
-        body: SingleChildScrollView(
-            child: !initialized
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : new StaggeredGridView.countBuilder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    crossAxisCount: 9,
-                    itemCount: weightAndPicList.length,
-                    itemBuilder: (BuildContext context, int index) =>
-                        weightAndPicList[index].havePicture
-                            ? Stack(children: [
-                                ImageCard(
-                                    units: units,
-                                    index: index,
-                                    pictureAndWeightList: pictureAndWeightList,
-                                    element: weightAndPicList[index],
-                                    ratio: ratio,
-                                    args: args),
-                                Positioned(
-                                  child: IconButton(
-                                    onPressed: () async {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              duration: Duration(seconds: 1),
-                                              backgroundColor:
-                                                  Colors.blueGrey[700],
-                                              content: Text(
-                                                  'Weight and Picture deleted')));
-                                      await Provider.of<WeightAndPicturesData>(
-                                              context,
-                                              listen: false)
-                                          .deleteSingleWeightAndPics(
-                                              weightAndPicList[index].dateTime,
-                                              id);
-                                      pictureAndWeightList.removeWhere(
-                                          (element) =>
-                                              element.dateTime ==
-                                              weightAndPicList[index].dateTime);
-                                      setState(() {
-                                        weightAndPicList.removeWhere(
-                                            (element) =>
-                                                element.dateTime ==
-                                                weightAndPicList[index]
-                                                    .dateTime);
-                                      });
-                                    },
-                                    icon: Icon(Icons.delete),
-                                    color: Colors.white,
-                                  ),
-                                  top: 0,
-                                  left: 0,
-                                ),
-                              ])
-                            : Stack(children: [
-                                WithoutImageCard(
-                                    units: units,
-                                    element: weightAndPicList[index],
-                                    ratio: ratio,
-                                    args: args),
-                                Positioned(
-                                  child: IconButton(
-                                    onPressed: () async {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              duration: Duration(seconds: 1),
-                                              backgroundColor:
-                                                  Colors.blueGrey[700],
-                                              content: Text('Weight deleted')));
-                                      await Provider.of<WeightAndPicturesData>(
-                                              context,
-                                              listen: false)
-                                          .deleteSingleWeightAndPics(
-                                              weightAndPicList[index].dateTime,
-                                              id);
-                                      pictureAndWeightList.removeWhere(
-                                          (element) =>
-                                              element.dateTime ==
-                                              weightAndPicList[index].dateTime);
-                                      setState(() {
-                                        weightAndPicList.removeWhere(
-                                            (element) =>
-                                                element.dateTime ==
-                                                weightAndPicList[index]
-                                                    .dateTime);
-                                      });
-                                    },
-                                    icon: Icon(Icons.delete),
-                                    color: Colors.blueGrey[300],
-                                  ),
-                                  top: 0,
-                                  right: 0,
-                                ),
-                              ]),
-                    staggeredTileBuilder: (int index) =>
-                        new StaggeredTile.count(
-                            3, weightAndPicList[index].havePicture ? 4 : 2),
-                    mainAxisSpacing: 0,
-                    crossAxisSpacing: 0,
-                  )));
+        body: lastDelete
+            ? Center(
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context)
+                        .pushReplacementNamed('/AddNewJourney');
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.cyan,
+                      borderRadius: BorderRadius.circular(11),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                        vertical: 20 * ratio, horizontal: 22 * ratio),
+//color: Colors.cyan,
+                    margin: EdgeInsets.only(
+                      top: 20 * ratio,
+                      left: 15 * ratio,
+                      right: 15 * ratio,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Spacer(),
+                        Icon(
+                          Icons.pedal_bike_outlined,
+                          color: Colors.white,
+                          size: 33 * ratio,
+                        ),
+                        SizedBox(
+                          width: 12 * ratio,
+                        ),
+                        Text('Start new journey !',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 20 * ratio,
+                                fontWeight: FontWeight.bold)),
+                        Spacer(),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            : SingleChildScrollView(
+                child: !initialized
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : new StaggeredGridView.countBuilder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        crossAxisCount: 9,
+                        itemCount: weightAndPicList.length,
+                        itemBuilder: (BuildContext context, int index) =>
+                            weightAndPicList[index].havePicture
+                                ? Stack(children: [
+                                    ImageCard(
+                                        units: units,
+                                        index: index,
+                                        pictureAndWeightList:
+                                            pictureAndWeightList,
+                                        element: weightAndPicList[index],
+                                        ratio: ratio,
+                                        args: args),
+                                    Positioned(
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  duration:
+                                                      Duration(seconds: 1),
+                                                  backgroundColor:
+                                                      Colors.blueGrey[700],
+                                                  content: Text(
+                                                      'Weight and Picture deleted')));
+                                          bool shouldNavigate =
+                                              Provider.of<WeightAndPicturesData>(
+                                                          context,
+                                                          listen: false)
+                                                      .weightAndPics
+                                                      .length ==
+                                                  1;
+                                          await Provider.of<
+                                                      WeightAndPicturesData>(
+                                                  context,
+                                                  listen: false)
+                                              .deleteSingleWeightAndPics(
+                                                  weightAndPicList[index]
+                                                      .dateTime,
+                                                  id);
+                                          pictureAndWeightList.removeWhere(
+                                              (element) =>
+                                                  element.dateTime ==
+                                                  weightAndPicList[index]
+                                                      .dateTime);
+                                          setState(() {
+                                            weightAndPicList.removeWhere(
+                                                (element) =>
+                                                    element.dateTime ==
+                                                    weightAndPicList[index]
+                                                        .dateTime);
+                                          });
+                                          if (shouldNavigate) {
+                                            setState(() {
+                                              lastDelete = true;
+                                            });
+                                            // Navigator.of(context).popUntil(
+                                            //      ModalRoute.withName('name'));
+                                            // Navigator.of(context)
+                                            //     .pushReplacementNamed(
+                                            //         '/AddNewJourney');
+                                          }
+                                        },
+                                        icon: Icon(Icons.delete),
+                                        color: Colors.white,
+                                      ),
+                                      top: 0,
+                                      left: 0,
+                                    ),
+                                  ])
+                                : Stack(children: [
+                                    WithoutImageCard(
+                                        units: units,
+                                        element: weightAndPicList[index],
+                                        ratio: ratio,
+                                        args: args),
+                                    Positioned(
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  duration:
+                                                      Duration(seconds: 1),
+                                                  backgroundColor:
+                                                      Colors.blueGrey[700],
+                                                  content:
+                                                      Text('Weight deleted')));
+                                          bool shouldNavigate =
+                                              Provider.of<WeightAndPicturesData>(
+                                                          context,
+                                                          listen: false)
+                                                      .weightAndPics
+                                                      .length ==
+                                                  1;
+                                          await Provider.of<
+                                                      WeightAndPicturesData>(
+                                                  context,
+                                                  listen: false)
+                                              .deleteSingleWeightAndPics(
+                                                  weightAndPicList[index]
+                                                      .dateTime,
+                                                  id);
+                                          pictureAndWeightList.removeWhere(
+                                              (element) =>
+                                                  element.dateTime ==
+                                                  weightAndPicList[index]
+                                                      .dateTime);
+                                          setState(() {
+                                            weightAndPicList.removeWhere(
+                                                (element) =>
+                                                    element.dateTime ==
+                                                    weightAndPicList[index]
+                                                        .dateTime);
+                                          });
+                                          if (shouldNavigate) {
+                                            setState(() {
+                                              lastDelete = true;
+                                            });
+                                            // Navigator.of(context)
+                                            //     .pushReplacementNamed(
+                                            //         '/AddNewJourney');
+                                          }
+                                        },
+                                        icon: Icon(Icons.delete),
+                                        color: Colors.blueGrey[300],
+                                      ),
+                                      top: 0,
+                                      right: 0,
+                                    ),
+                                  ]),
+                        staggeredTileBuilder: (int index) =>
+                            new StaggeredTile.count(
+                                3, weightAndPicList[index].havePicture ? 4 : 2),
+                        mainAxisSpacing: 0,
+                        crossAxisSpacing: 0,
+                      )));
   }
 }
 

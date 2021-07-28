@@ -28,7 +28,7 @@ class GalleryViewScreen extends StatelessWidget {
           return PhotoViewGalleryPageOptions(
             imageProvider: FileImage(File(list[index].path)),
             initialScale: PhotoViewComputedScale.contained * 0.95,
-            heroAttributes: PhotoViewHeroAttributes(tag: list[index].dateTime),
+            heroAttributes: PhotoViewHeroAttributes(tag: list[index].path),
           );
         },
         itemCount: list.length,

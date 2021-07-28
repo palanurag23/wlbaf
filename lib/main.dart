@@ -1,4 +1,5 @@
-//adb connect 192.168.1.4:5555
+//adb tcpip 5555 <phone connedted -adb tcpip "port Name"
+//adb connect 192.168.1.2:5555 <phone disconnected -adb connect "ip address":"port Name"
 
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
@@ -6,6 +7,7 @@ import 'package:provider/single_child_widget.dart';
 import 'package:wlbaf/screens/GalleryViewScreen.dart';
 import 'package:wlbaf/screens/JourneyMonthsScreen.dart';
 import 'package:wlbaf/screens/addWeight.dart';
+import 'package:wlbaf/screens/editGoal.dart';
 import 'package:wlbaf/screens/journeyListScreen.dart';
 import 'package:wlbaf/screens/loadingScreen.dart';
 import 'package:wlbaf/screens/monthsWeightAndPicsScreen.dart';
@@ -61,6 +63,7 @@ class MyApp extends StatelessWidget {
           GalleryViewScreen.routeName: (context) => GalleryViewScreen(),
           '/MonthsWeightAndPicsScreen': (context) =>
               MonthsWeightAndPicsScreen(),
+          EditGoal.routeName: (context) => EditGoal(),
           '/JourneyMonthScreen': (context) => JourneyMonthScreen(),
           '/JourneyListScreen': (context) => JourneyListScreen(),
           '/AddNewJourney': (context) => AddNewJourney(),

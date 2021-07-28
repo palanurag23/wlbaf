@@ -79,6 +79,8 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double ratio = MediaQuery.of(context).size.height / 896;
+
     weightAndPics =
         Provider.of<WeightAndPicturesData>(context, listen: true).weightAndPics;
     weightListEmpty = weightAndPics.isEmpty;
@@ -95,15 +97,19 @@ class _TabsScreenState extends State<TabsScreen> {
       child: Scaffold(
         floatingActionButton: _selectedPageIndex == 0
             ? isInitialized
-                ? FloatingActionButton.extended(
-                    backgroundColor: Colors.blueGrey[900],
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/AddWeightScreen');
-                    },
-                    icon: weightAddedToday ? Icon(Icons.edit) : Icon(Icons.add),
-                    label:
-                        Text(weightListEmpty ? 'add' : 'Day $todaysDayCount'),
-                  )
+                ? weightAndPics.isEmpty
+                    ? Container()
+                    : FloatingActionButton.extended(
+                        backgroundColor: Colors.blueGrey[900],
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/AddWeightScreen');
+                        },
+                        icon: weightAddedToday
+                            ? Icon(Icons.edit)
+                            : Icon(Icons.add),
+                        label: Text(
+                            weightListEmpty ? 'add' : 'Day $todaysDayCount'),
+                      )
                 : Container()
             : Container(),
         body: !isInitialized
@@ -116,7 +122,55 @@ class _TabsScreenState extends State<TabsScreen> {
                   scale: animation,
                   child: child,
                 ),
-                child: _pages[_selectedPageIndex]['page'],
+                child: weightAndPics.isEmpty
+                    ? Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushReplacementNamed('/AddNewJourney');
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: _selectedPageIndex == 0
+                                  ? Colors.blueGrey[900]
+                                  : _selectedPageIndex == 1
+                                      ? Colors.cyan
+                                      : Colors.amber,
+                              borderRadius: BorderRadius.circular(11),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 20 * ratio, horizontal: 22 * ratio),
+//color: Colors.cyan,
+                            margin: EdgeInsets.only(
+                              top: 20 * ratio,
+                              left: 15 * ratio,
+                              right: 15 * ratio,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Spacer(),
+                                Icon(
+                                  Icons.pedal_bike_outlined,
+                                  color: Colors.white,
+                                  size: 33 * ratio,
+                                ),
+                                SizedBox(
+                                  width: 12 * ratio,
+                                ),
+                                Text('Start new journey !',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: 20 * ratio,
+                                        fontWeight: FontWeight.bold)),
+                                Spacer(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    : _pages[_selectedPageIndex]['page'],
               ),
         drawer: Drawer(
           child: Column(

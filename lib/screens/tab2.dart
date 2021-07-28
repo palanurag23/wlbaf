@@ -3,6 +3,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wlbaf/providers/providers.dart';
+import 'package:wlbaf/screens/editGoal.dart';
 import 'package:wlbaf/screens/photo_gallery.dart';
 import '../models/modelClasses.dart';
 import 'package:intl/intl.dart';
@@ -137,7 +138,9 @@ class _Tab2State extends State<Tab2> {
                   text: TextSpan(
                       text: NumberFormat("##").format(percentage),
                       style: TextStyle(
-                          color: Colors.blueGrey[900],
+                          color: percentage >= 100
+                              ? Colors.greenAccent[700]
+                              : Colors.blueGrey[900],
                           fontStyle: FontStyle.italic,
                           fontSize: 30 * ratio,
                           fontWeight: FontWeight.w900),
@@ -145,13 +148,16 @@ class _Tab2State extends State<Tab2> {
                         TextSpan(
                             text: '%',
                             style: TextStyle(
-                                color: Colors.blueGrey[900],
+                                color: percentage >= 100
+                                    ? Colors.greenAccent[700]
+                                    : Colors.blueGrey[900],
                                 fontStyle: FontStyle.italic,
                                 fontSize: 20 * ratio,
                                 fontWeight: FontWeight.bold))
                       ]),
                 ),
-                progressColor: Colors.cyan,
+                progressColor:
+                    percentage >= 100 ? Colors.greenAccent[400] : Colors.cyan,
               ),
             ),
             // SizedBox(
@@ -189,124 +195,262 @@ class _Tab2State extends State<Tab2> {
             //     ],
             //   ),
             // ),
-            Container(
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  //  if (length > 1)
-                  Container(
-                    child: Column(
-                      children: [
-                        Text('Started from',
-                            style: TextStyle(
-                                color: Colors.blueGrey[400],
-                                fontStyle: FontStyle.italic,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold)),
-                        RichText(
-                          text: TextSpan(
-                              text: NumberFormat("###.#")
-                                  .format(weightAndPics.first.weight),
+            if (percentage >= 100)
+              Container(
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    //  if (length > 1)
+                    Container(
+                      child: Column(
+                        children: [
+                          Text('Started from',
+                              style: TextStyle(
+                                  color: Colors.cyan, //blueGrey[400],
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold)),
+                          RichText(
+                            text: TextSpan(
+                                text: NumberFormat("###.#")
+                                    .format(weightAndPics.first.weight),
+                                style: TextStyle(
+                                    color: Colors.cyan, //blueGrey[400],
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 20, //* ratio,
+                                    fontWeight: FontWeight.w900),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: units,
+                                      style: TextStyle(
+                                          color: Colors.cyan, //blueGrey[400],
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 10 * ratio,
+                                          fontWeight: FontWeight.bold))
+                                ]),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text('Goal ',
+                                  style: TextStyle(
+                                      color: Colors.greenAccent[700],
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)),
+                              // Icon(
+                              //   Icons.face_unlock_rounded,
+                              //   color: Colors.blueGrey[500],
+                              //   size: 15,
+                              // ),
+                              Text('Achieved !',
+                                  style: TextStyle(
+                                      color: Colors.greenAccent[700],
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold))
+                            ],
+                          ),
+                          RichText(
+                            text: TextSpan(
+                                text: NumberFormat("###.#")
+                                    .format(journey.targetWeight),
+                                style: TextStyle(
+                                    color: Colors.greenAccent[700],
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 20, //* ratio,
+                                    fontWeight: FontWeight.w900),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: units,
+                                      style: TextStyle(
+                                          color: Colors.greenAccent[700],
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 10 * ratio,
+                                          fontWeight: FontWeight.bold))
+                                ]),
+                          )
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, EditGoal.routeName);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.cyan, //blueGrey[900],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 4 * ratio, horizontal: 5 * ratio),
+//color: Colors.cyan,
+                        margin: EdgeInsets.only(
+                          top: 0 * ratio,
+                          left: 0 * ratio,
+                          right: 0 * ratio,
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Set new',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontStyle: FontStyle.italic,
+                                        fontSize: 12 * ratio,
+                                        fontWeight: FontWeight.bold)),
+                                Icon(
+                                  Icons.arrow_forward,
+                                  color: Colors.white,
+                                  size: 15,
+                                ),
+                              ],
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                  text: 'GOAL',
+                                  style: TextStyle(
+                                      color: Colors
+                                          .white, //.blueGrey[400], //Colors.blueGrey[900],
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: 20 * ratio,
+                                      fontWeight: FontWeight.w900),
+                                  children: <TextSpan>[]),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            if (percentage < 100)
+              Container(
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    //  if (length > 1)
+                    Container(
+                      child: Column(
+                        children: [
+                          Text('Started from',
                               style: TextStyle(
                                   color: Colors.blueGrey[400],
                                   fontStyle: FontStyle.italic,
-                                  fontSize: 20, //* ratio,
-                                  fontWeight: FontWeight.w900),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: units,
-                                    style: TextStyle(
-                                        color: Colors.blueGrey[400],
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: 10 * ratio,
-                                        fontWeight: FontWeight.bold))
-                              ]),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: Column(
-                      children: [
-                        Text('Now',
-                            style: TextStyle(
-                                color: Colors.blueGrey[400],
-                                fontStyle: FontStyle.italic,
-                                fontSize: 20 * ratio,
-                                fontWeight: FontWeight.bold)),
-                        RichText(
-                          text: TextSpan(
-                              text: NumberFormat("###.#")
-                                  .format(weightAndPics.last.weight),
-                              style: TextStyle(
-                                  color: Colors.cyan, //Colors.blueGrey[900],
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: 40 * ratio,
-                                  fontWeight: FontWeight.w900),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: units,
-                                    style: TextStyle(
-                                        color:
-                                            Colors.cyan, //Colors.blueGrey[400],
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: 10 * ratio,
-                                        fontWeight: FontWeight.bold))
-                              ]),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text('    Goal ',
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold)),
+                          RichText(
+                            text: TextSpan(
+                                text: NumberFormat("###.#")
+                                    .format(weightAndPics.first.weight),
                                 style: TextStyle(
                                     color: Colors.blueGrey[400],
                                     fontStyle: FontStyle.italic,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold)),
-                            Icon(
-                              Icons.lock,
-                              color: Colors.blueGrey[500],
-                              size: 15,
-                            ),
-                            Text('   ',
+                                    fontSize: 20, //* ratio,
+                                    fontWeight: FontWeight.w900),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: units,
+                                      style: TextStyle(
+                                          color: Colors.blueGrey[400],
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 10 * ratio,
+                                          fontWeight: FontWeight.bold))
+                                ]),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: Column(
+                        children: [
+                          Text('Now',
+                              style: TextStyle(
+                                  color: Colors.blueGrey[400],
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 20 * ratio,
+                                  fontWeight: FontWeight.bold)),
+                          RichText(
+                            text: TextSpan(
+                                text: NumberFormat("###.#")
+                                    .format(weightAndPics.last.weight),
+                                style: TextStyle(
+                                    color: Colors.cyan, //Colors.blueGrey[900],
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: 40 * ratio,
+                                    fontWeight: FontWeight.w900),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: units,
+                                      style: TextStyle(
+                                          color: Colors
+                                              .cyan, //Colors.blueGrey[400],
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 10 * ratio,
+                                          fontWeight: FontWeight.bold))
+                                ]),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text('    Goal ',
+                                  style: TextStyle(
+                                      color: Colors.blueGrey[400],
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold)),
+                              Icon(
+                                Icons.lock,
+                                color: Colors.blueGrey[500],
+                                size: 15,
+                              ),
+                              Text('   ',
+                                  style: TextStyle(
+                                      color: Colors.blueGrey[500],
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold))
+                            ],
+                          ),
+                          RichText(
+                            text: TextSpan(
+                                text: NumberFormat("###.#")
+                                    .format(journey.targetWeight),
                                 style: TextStyle(
                                     color: Colors.blueGrey[500],
                                     fontStyle: FontStyle.italic,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold))
-                          ],
-                        ),
-                        RichText(
-                          text: TextSpan(
-                              text: NumberFormat("###.#")
-                                  .format(journey.targetWeight),
-                              style: TextStyle(
-                                  color: Colors.blueGrey[500],
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: 20, //* ratio,
-                                  fontWeight: FontWeight.w900),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: units,
-                                    style: TextStyle(
-                                        color: Colors.blueGrey[500],
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: 10 * ratio,
-                                        fontWeight: FontWeight.bold))
-                              ]),
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                                    fontSize: 20, //* ratio,
+                                    fontWeight: FontWeight.w900),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: units,
+                                      style: TextStyle(
+                                          color: Colors.blueGrey[500],
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 10 * ratio,
+                                          fontWeight: FontWeight.bold))
+                                ]),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
 
             GestureDetector(
               onTap: () {

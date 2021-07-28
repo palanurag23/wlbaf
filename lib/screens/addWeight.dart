@@ -175,26 +175,21 @@ class _AddWeightState extends State<AddWeight> {
 
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.blueGrey[900],
-        child: GestureDetector(
-          onTap: journeyId == 0
-              ? () {}
-              : () {
-                  weightAndPicturesData.addWeightAndPic(
-                      _currentValue,
-                      journeyId,
-                      _image != null,
-                      _image != null ? _image.path : '.....');
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      duration: Duration(seconds: 1),
-                      backgroundColor: Colors.blueGrey[700],
-                      content: Text(_image != null
-                          ? 'Weight and Picture added'
-                          : 'Weight added')));
+      bottomNavigationBar: GestureDetector(
+        onTap: () {
+          weightAndPicturesData.addWeightAndPic(_currentValue, journeyId,
+              _image != null, _image != null ? _image.path : '.....');
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              duration: Duration(seconds: 1),
+              backgroundColor: Colors.blueGrey[700],
+              content: Text(_image != null
+                  ? 'Weight and Picture added'
+                  : 'Weight added')));
 
-                  Navigator.of(context).pop();
-                },
+          Navigator.of(context).pop();
+        },
+        child: BottomAppBar(
+          color: Colors.blueGrey[900],
           child: Container(
             // color: Colors.amber,
             height: 50,

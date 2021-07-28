@@ -55,7 +55,7 @@ class _Tab1State extends State<Tab1> {
     return !isInitialized
         ? CircularProgressIndicator()
         : SingleChildScrollView(
-            child: currentjourneyId == 0
+            child: weightAndPics.isEmpty
                 ? Text('no journey selected')
                 : weightAndPics.isEmpty
                     ? Text('no data yet in journey $currentjourneyId')

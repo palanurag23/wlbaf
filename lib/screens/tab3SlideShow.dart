@@ -70,63 +70,44 @@ class _Tab3State extends State<Tab3> {
                                   itemBuilder:
                                       (context, itemIndex, pageViewIndex) {
                                     return Stack(children: [
-                                      Card(
-                                        color: Colors.amber,
-                                        semanticContainer: true,
-                                        clipBehavior:
-                                            Clip.antiAliasWithSaveLayer,
-                                        child: Image.file(
-                                          File(snapshot.data[itemIndex].path),
-                                          fit: BoxFit.cover,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                        elevation: 5,
-                                        margin: EdgeInsets.all(5),
-                                      ),
-                                      Positioned(
-                                          bottom: 10,
-                                          right: 10,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.amber[400],
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
+                                      Center(
+                                        child: Stack(
+                                          children: [
+                                            Card(
+                                              color: Colors.amber,
+                                              semanticContainer: true,
+                                              clipBehavior:
+                                                  Clip.antiAliasWithSaveLayer,
+                                              child: Image.file(
+                                                File(snapshot
+                                                    .data[itemIndex].path),
+                                                fit: BoxFit.cover,
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                              elevation: 5,
+                                              margin: EdgeInsets.all(5),
                                             ),
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 5 * ratio,
-                                                horizontal: 5 * ratio),
-                                            child: RichText(
-                                              text: TextSpan(
-                                                  text: ' ',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontStyle:
-                                                          FontStyle.italic,
-                                                      fontSize: 20 * ratio,
-                                                      fontWeight:
-                                                          FontWeight.w900),
-                                                  children: <TextSpan>[
-                                                    TextSpan(
-                                                        text: NumberFormat(
-                                                                "###.#")
-                                                            .format(snapshot
-                                                                .data[itemIndex]
-                                                                .weight),
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontStyle: FontStyle
-                                                                .italic,
-                                                            fontSize:
-                                                                30 * ratio,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold)),
-                                                    TextSpan(
-                                                        text: ' $units'
-                                                            .toString(),
+                                            Positioned(
+                                                bottom: 10,
+                                                right: 10,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.blueGrey[900],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  padding: EdgeInsets.only(
+                                                      top: 2,
+                                                      bottom: 2,
+                                                      left: 2 * ratio,
+                                                      right: 4 * ratio),
+                                                  child: RichText(
+                                                    text: TextSpan(
+                                                        text: ' ',
                                                         style: TextStyle(
                                                             color: Colors.white,
                                                             fontStyle: FontStyle
@@ -135,10 +116,46 @@ class _Tab3State extends State<Tab3> {
                                                                 20 * ratio,
                                                             fontWeight:
                                                                 FontWeight
-                                                                    .bold))
-                                                  ]),
-                                            ),
-                                          )),
+                                                                    .w900),
+                                                        children: <TextSpan>[
+                                                          TextSpan(
+                                                              text: NumberFormat(
+                                                                      "###.#")
+                                                                  .format(snapshot
+                                                                      .data[
+                                                                          itemIndex]
+                                                                      .weight),
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontStyle:
+                                                                      FontStyle
+                                                                          .normal,
+                                                                  fontSize: 15 *
+                                                                      ratio,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .normal)),
+                                                          TextSpan(
+                                                              text: ' $units'
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontStyle:
+                                                                      FontStyle
+                                                                          .italic,
+                                                                  fontSize: 10 *
+                                                                      ratio,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold))
+                                                        ]),
+                                                  ),
+                                                ))
+                                          ],
+                                        ),
+                                      ),
                                     ]);
                                   },
                                   options: CarouselOptions(
@@ -149,7 +166,7 @@ class _Tab3State extends State<Tab3> {
                                     enableInfiniteScroll: true,
                                     reverse: false,
                                     autoPlay: autoPlay,
-                                    autoPlayInterval: Duration(seconds: 3),
+                                    autoPlayInterval: Duration(seconds: 2),
                                     autoPlayAnimationDuration:
                                         Duration(milliseconds: 1000),
                                     autoPlayCurve: Curves.fastOutSlowIn,

@@ -139,31 +139,33 @@ class _JourneyMonthScreenState extends State<JourneyMonthScreen> {
 
     weightAndPicList =
         Provider.of<WeightAndPicturesData>(context).weightAndPics;
-    weightAndPicList.sort((a, b) => DateTime.parse(a.dateTime)
-        .year
-        .compareTo(DateTime.parse(b.dateTime).year));
-    minYear = DateTime.parse(weightAndPicList.first.dateTime).year;
-    maxYear = DateTime.parse(weightAndPicList.last.dateTime).year;
-    years = [minYear];
+    if (weightAndPicList.isNotEmpty) {
+      weightAndPicList.sort((a, b) => DateTime.parse(a.dateTime)
+          .year
+          .compareTo(DateTime.parse(b.dateTime).year));
+      minYear = DateTime.parse(weightAndPicList.first.dateTime).year;
+      maxYear = DateTime.parse(weightAndPicList.last.dateTime).year;
+      years = [minYear];
 
-    setYearList(weightAndPicList);
-    if (!years.contains(selectedYear)) {
-      selectedYear = years.last;
+      setYearList(weightAndPicList);
+      if (!years.contains(selectedYear)) {
+        selectedYear = years.last;
+      }
+      yearSubList = weightAndPicList.sublist(
+          weightAndPicList.indexWhere(
+              (e) => DateTime.parse(e.dateTime).year == selectedYear),
+          weightAndPicList.lastIndexWhere(
+                  (e) => DateTime.parse(e.dateTime).year == selectedYear) +
+              1);
+      yearSubList.sort((a, b) => DateTime.parse(a.dateTime)
+          .month
+          .compareTo(DateTime.parse(b.dateTime).month));
+      months = [DateTime.parse(yearSubList.first.dateTime).month];
+
+      setMonthList(yearSubList);
+      selectedMonth = months.last;
+      monthSubList = setListForMonth(yearSubList, selectedMonth);
     }
-    yearSubList = weightAndPicList.sublist(
-        weightAndPicList
-            .indexWhere((e) => DateTime.parse(e.dateTime).year == selectedYear),
-        weightAndPicList.lastIndexWhere(
-                (e) => DateTime.parse(e.dateTime).year == selectedYear) +
-            1);
-    yearSubList.sort((a, b) => DateTime.parse(a.dateTime)
-        .month
-        .compareTo(DateTime.parse(b.dateTime).month));
-    months = [DateTime.parse(yearSubList.first.dateTime).month];
-
-    setMonthList(yearSubList);
-    selectedMonth = months.last;
-    monthSubList = setListForMonth(yearSubList, selectedMonth);
 
     print(months);
     return Scaffold(
@@ -181,224 +183,278 @@ class _JourneyMonthScreenState extends State<JourneyMonthScreen> {
       body: !initialized
           ? CircularProgressIndicator()
           : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 331),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(11),
-                    ),
-                    padding: EdgeInsets.only(
-                        top: yearListExpanded ? 5 * ratio : 11 * ratio,
-                        left: 0 * ratio,
-                        bottom: yearListExpanded ? 5 * ratio : 11 * ratio),
-//color: Colors.cyan,
-                    margin: EdgeInsets.only(
-                      top: 0 * ratio,
-                      left: 15 * ratio,
-                      right: 15 * ratio,
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
+              child: weightAndPicList.isEmpty
+                  ? Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushReplacementNamed('/AddNewJourney');
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.cyan,
+                            borderRadius: BorderRadius.circular(11),
+                          ),
                           padding: EdgeInsets.symmetric(
-                              //    vertical: 20 * ratio
-                              horizontal: 22 * ratio),
+                              vertical: 20 * ratio, horizontal: 22 * ratio),
+//color: Colors.cyan,
+                          margin: EdgeInsets.only(
+                            top: 20 * ratio,
+                            left: 15 * ratio,
+                            right: 15 * ratio,
+                          ),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text('$selectedYear',
+                              Spacer(),
+                              Icon(
+                                Icons.pedal_bike_outlined,
+                                color: Colors.white,
+                                size: 33 * ratio,
+                              ),
+                              SizedBox(
+                                width: 12 * ratio,
+                              ),
+                              Text('Start new journey !',
                                   style: TextStyle(
-                                      color: Colors.cyan,
-                                      fontStyle: FontStyle.italic,
-                                      fontSize: 25 * ratio,
+                                      color: Colors.white,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: 20 * ratio,
                                       fontWeight: FontWeight.bold)),
                               Spacer(),
-                              if (years.length > 1)
-                                IconButton(
-                                  icon: Icon(yearListExpanded
-                                      ? Icons.keyboard_arrow_up
-                                      : Icons.keyboard_arrow_down_sharp),
-                                  iconSize: 40,
-                                  color: Colors.cyan,
-                                  onPressed: () {
-                                    setState(() {
-                                      yearListExpanded = !yearListExpanded;
-                                    });
-                                  },
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AnimatedContainer(
+                          duration: Duration(milliseconds: 331),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(11),
+                          ),
+                          padding: EdgeInsets.only(
+                              top: yearListExpanded ? 5 * ratio : 11 * ratio,
+                              left: 0 * ratio,
+                              bottom:
+                                  yearListExpanded ? 5 * ratio : 11 * ratio),
+//color: Colors.cyan,
+                          margin: EdgeInsets.only(
+                            top: 0 * ratio,
+                            left: 15 * ratio,
+                            right: 15 * ratio,
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    //    vertical: 20 * ratio
+                                    horizontal: 22 * ratio),
+                                child: Row(
+                                  children: [
+                                    Text('$selectedYear',
+                                        style: TextStyle(
+                                            color: Colors.cyan,
+                                            fontStyle: FontStyle.italic,
+                                            fontSize: 25 * ratio,
+                                            fontWeight: FontWeight.bold)),
+                                    Spacer(),
+                                    if (years.length > 1)
+                                      IconButton(
+                                        icon: Icon(yearListExpanded
+                                            ? Icons.keyboard_arrow_up
+                                            : Icons.keyboard_arrow_down_sharp),
+                                        iconSize: 40,
+                                        color: Colors.cyan,
+                                        onPressed: () {
+                                          setState(() {
+                                            yearListExpanded =
+                                                !yearListExpanded;
+                                          });
+                                        },
+                                      )
+                                  ],
+                                ),
+                              ),
+                              if (yearListExpanded)
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(11),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 5 * ratio,
+                                      horizontal: 22 * ratio),
+//color: Colors.cyan,
+                                  margin: EdgeInsets.only(left: 11, right: 11),
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.only(),
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) {
+                                      return AnimationConfiguration
+                                          .staggeredList(
+                                        position: index,
+                                        child: FlipAnimation(
+                                          child: Column(
+                                            //  crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              InkWell(
+                                                onTap: () async {
+                                                  setState(() {
+                                                    selectedYear = years[index];
+
+                                                    yearSubList = weightAndPicList.sublist(
+                                                        weightAndPicList
+                                                            .indexWhere((e) =>
+                                                                DateTime.parse(e
+                                                                        .dateTime)
+                                                                    .year ==
+                                                                selectedYear),
+                                                        weightAndPicList.lastIndexWhere((e) =>
+                                                                DateTime.parse(e
+                                                                        .dateTime)
+                                                                    .year ==
+                                                                selectedYear) +
+                                                            1);
+                                                    print(
+                                                        'object6 weight in year' +
+                                                            yearSubList.length
+                                                                .toString());
+                                                    yearSubList.sort((a, b) =>
+                                                        DateTime.parse(
+                                                                a.dateTime)
+                                                            .month
+                                                            .compareTo(
+                                                                DateTime.parse(b
+                                                                        .dateTime)
+                                                                    .month));
+                                                    print(yearSubList
+                                                        .first.weight);
+                                                    print('object7');
+
+                                                    months = [
+                                                      DateTime.parse(yearSubList
+                                                              .first.dateTime)
+                                                          .month
+                                                    ];
+                                                    print('object8');
+
+                                                    setMonthList(yearSubList);
+                                                  });
+                                                  await Future.delayed(Duration(
+                                                      milliseconds: 00));
+                                                  setState(() {
+                                                    yearListExpanded =
+                                                        !yearListExpanded;
+                                                  });
+                                                },
+                                                child: Text('${years[index]}',
+                                                    style: TextStyle(
+                                                        color: years[index] ==
+                                                                selectedYear
+                                                            ? Colors.cyan
+                                                            : Colors.blueGrey,
+                                                        fontStyle:
+                                                            FontStyle.italic,
+                                                        fontSize:
+                                                            years[index] ==
+                                                                    selectedYear
+                                                                ? 27 * ratio
+                                                                : 25 * ratio,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                              ),
+                                              if (index != (years.length - 1))
+                                                Divider()
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    itemCount: years.length,
+                                  ),
                                 )
                             ],
                           ),
                         ),
-                        if (yearListExpanded)
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(11),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                vertical: 5 * ratio, horizontal: 22 * ratio),
-//color: Colors.cyan,
-                            margin: EdgeInsets.only(left: 11, right: 11),
-                            child: ListView.builder(
-                              padding: EdgeInsets.only(),
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return AnimationConfiguration.staggeredList(
+                        Container(
+                          child: ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedMonth = months[index];
+                                    monthSubList = setListForMonth(
+                                        yearSubList, selectedMonth);
+                                  });
+                                  Navigator.of(context).pushNamed(
+                                      '/MonthsWeightAndPicsScreen',
+                                      arguments: ScreenArguments(
+                                          list: monthSubList,
+                                          appBarTitle:
+                                              '${monthNames[months[index] - 1]} $selectedYear'));
+                                },
+                                child: AnimationConfiguration.staggeredList(
                                   position: index,
-                                  child: FlipAnimation(
-                                    child: Column(
-                                      //  crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        InkWell(
-                                          onTap: () async {
-                                            setState(() {
-                                              selectedYear = years[index];
-
-                                              yearSubList = weightAndPicList.sublist(
-                                                  weightAndPicList.indexWhere(
-                                                      (e) =>
-                                                          DateTime.parse(
-                                                                  e.dateTime)
-                                                              .year ==
-                                                          selectedYear),
-                                                  weightAndPicList
-                                                          .lastIndexWhere((e) =>
-                                                              DateTime.parse(e
-                                                                      .dateTime)
-                                                                  .year ==
-                                                              selectedYear) +
-                                                      1);
-                                              print('object6 weight in year' +
-                                                  yearSubList.length
-                                                      .toString());
-                                              yearSubList.sort((a, b) =>
-                                                  DateTime.parse(a.dateTime)
-                                                      .month
-                                                      .compareTo(DateTime.parse(
-                                                              b.dateTime)
-                                                          .month));
-                                              print(yearSubList.first.weight);
-                                              print('object7');
-
-                                              months = [
-                                                DateTime.parse(yearSubList
-                                                        .first.dateTime)
-                                                    .month
-                                              ];
-                                              print('object8');
-
-                                              setMonthList(yearSubList);
-                                            });
-                                            await Future.delayed(
-                                                Duration(milliseconds: 00));
-                                            setState(() {
-                                              yearListExpanded =
-                                                  !yearListExpanded;
-                                            });
-                                          },
-                                          child: Text('${years[index]}',
-                                              style: TextStyle(
-                                                  color: years[index] ==
-                                                          selectedYear
-                                                      ? Colors.cyan
-                                                      : Colors.blueGrey,
-                                                  fontStyle: FontStyle.italic,
-                                                  fontSize: years[index] ==
-                                                          selectedYear
-                                                      ? 27 * ratio
-                                                      : 25 * ratio,
-                                                  fontWeight: FontWeight.bold)),
-                                        ),
-                                        if (index != (years.length - 1))
-                                          Divider()
-                                      ],
+                                  child: SlideAnimation(
+                                    // duration: Duration(seconds: 3),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      padding: EdgeInsets.only(
+                                          top: 11 * ratio,
+                                          left: 11 * ratio,
+                                          bottom: 11 * ratio),
+//color: Colors.cyan,
+                                      margin: EdgeInsets.only(
+                                        top: 5 * ratio,
+                                        left: 15 * ratio,
+                                        right: 15 * ratio,
+                                      ),
+                                      child: Text(monthNames[months[index] - 1],
+                                          style: TextStyle(
+                                              color: Colors.blueGrey[400],
+                                              fontStyle: FontStyle.italic,
+                                              fontSize: 20 * ratio,
+                                              fontWeight: FontWeight.w900)),
                                     ),
                                   ),
-                                );
-                              },
-                              itemCount: years.length,
-                            ),
-                          )
+                                ),
+                              );
+                            },
+                            itemCount: months.length,
+                          ),
+                        ),
+                        // Text(
+                        //     'selected mon $selectedMonth ,mon ${monthSubList.length}'),
+
+                        // Container(
+                        //   width: 400,
+                        //   color: Colors.greenAccent,
+                        //   height: 300,
+                        //   child: ListView.builder(
+                        //     itemBuilder: (context, index) {
+                        //       print(monthSubList.length);
+                        //       return GestureDetector(
+                        //         onTap: () {},
+                        //         child: Text(
+                        //             'weight ${monthSubList[index].weight.toString()},,${monthSubList[index].dateTime}'),
+                        //       );
+                        //     },
+                        //     itemCount: monthSubList.length,
+                        //   ),
+                        // )
                       ],
                     ),
-                  ),
-                  Container(
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedMonth = months[index];
-                              monthSubList =
-                                  setListForMonth(yearSubList, selectedMonth);
-                            });
-                            Navigator.of(context).pushNamed(
-                                '/MonthsWeightAndPicsScreen',
-                                arguments: ScreenArguments(
-                                    list: monthSubList,
-                                    appBarTitle:
-                                        '${monthNames[months[index] - 1]} $selectedYear'));
-                          },
-                          child: AnimationConfiguration.staggeredList(
-                            position: index,
-                            child: SlideAnimation(
-                              // duration: Duration(seconds: 3),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                padding: EdgeInsets.only(
-                                    top: 11 * ratio,
-                                    left: 11 * ratio,
-                                    bottom: 11 * ratio),
-//color: Colors.cyan,
-                                margin: EdgeInsets.only(
-                                  top: 5 * ratio,
-                                  left: 15 * ratio,
-                                  right: 15 * ratio,
-                                ),
-                                child: Text(monthNames[months[index] - 1],
-                                    style: TextStyle(
-                                        color: Colors.blueGrey[400],
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: 20 * ratio,
-                                        fontWeight: FontWeight.w900)),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                      itemCount: months.length,
-                    ),
-                  ),
-                  // Text(
-                  //     'selected mon $selectedMonth ,mon ${monthSubList.length}'),
-
-                  // Container(
-                  //   width: 400,
-                  //   color: Colors.greenAccent,
-                  //   height: 300,
-                  //   child: ListView.builder(
-                  //     itemBuilder: (context, index) {
-                  //       print(monthSubList.length);
-                  //       return GestureDetector(
-                  //         onTap: () {},
-                  //         child: Text(
-                  //             'weight ${monthSubList[index].weight.toString()},,${monthSubList[index].dateTime}'),
-                  //       );
-                  //     },
-                  //     itemCount: monthSubList.length,
-                  //   ),
-                  // )
-                ],
-              ),
             ),
     );
   }

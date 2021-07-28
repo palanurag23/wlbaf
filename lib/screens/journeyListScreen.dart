@@ -67,7 +67,7 @@ class _JourneyListScreenState extends State<JourneyListScreen> {
                                 false);
                         Navigator.of(context).pushNamed('/Tabs_screen');
                       },
-                      title: Text(journeyList[index].id.toString()),
+                      title: Text(journeyList[index].targetWeight.toString()),
                     );
                   },
                   itemCount: journeyList.length,

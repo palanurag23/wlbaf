@@ -77,7 +77,6 @@ class _TestingDataScreenState extends State<TestingDataScreen> {
                                                 onPressed: () {
                                                   journeyData
                                                       .deleteSingleJourney(
-                                                          journeys[index].id,
                                                           context);
                                                 }),
                                             subtitle: Text(journeys[index]

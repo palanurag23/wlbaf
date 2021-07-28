@@ -25,7 +25,7 @@ class SharedPreferencesData {
 class RateMyAppData {}
 
 class CurrentJourney with ChangeNotifier {
-  int currentJourneyId;
+  int currentJourneyId = 0;
   setOnlyINapp(int currentJourneyId, BuildContext context) {
     this.currentJourneyId = currentJourneyId;
     Provider.of<JourneysData>(context, listen: false)
@@ -40,18 +40,18 @@ class CurrentJourney with ChangeNotifier {
     print(' checkJourneyCount if empty then false= $checkJourneyCount ');
 
     if (checkJourneyCount) {
-      print('if $checkJourneyCount checkJourneyCount');
-      currentJourneyId = prefs.getInt('currentJourneyId');
-      int x = prefs.getInt('journeyCount');
-      print('$checkJourneyCount$currentJourneyId$x');
+      // print('if $checkJourneyCount checkJourneyCount');
+      currentJourneyId = 0; //prefs.getInt('currentJourneyId');
+      //  int x = prefs.getInt('journeyCount');
+      //  print('$checkJourneyCount$currentJourneyId$x');
     } else {
-      print('else $checkJourneyCount checkJourneyCount');
+      //print('else $checkJourneyCount checkJourneyCount');
 
-      await prefs.setInt('journeyCount', 0);
+      // await prefs.setInt('journeyCount', 0);
 
-      await prefs.setInt('currentJourneyId', 0);
-      print('      await prefs.setInt(currentJourneyId, 0);');
-      print('      await prefs.setInt(journeyCount, 0);');
+      // await prefs.setInt('currentJourneyId', 0);
+      // print('      await prefs.setInt(currentJourneyId, 0);');
+      // print('      await prefs.setInt(journeyCount, 0);');
 
       currentJourneyId = 0;
       notifyListeners();
@@ -61,7 +61,7 @@ class CurrentJourney with ChangeNotifier {
     await Provider.of<JourneysData>(context, listen: false)
         .fetchAndSetData(currentJourneyId: currentJourneyId);
 
-    if (currentJourneyId > 0) {
+    if (currentJourneyId == 0) {
       await Provider.of<WeightAndPicturesData>(context, listen: false)
           .fetchAndSetData(currentJourneyId);
     }
@@ -69,11 +69,11 @@ class CurrentJourney with ChangeNotifier {
 
   set(int id, BuildContext context, bool shouldFetchWeight,
       bool shouldEmpty) async {
-    SharedPreferences prefs =
-        Provider.of<SharedPreferencesData>(context, listen: false).get();
-    await prefs.setInt('currentJourneyId', id);
+    // SharedPreferences prefs =
+    //     Provider.of<SharedPreferencesData>(context, listen: false).get();
+    // await prefs.setInt('currentJourneyId', id);
 
-    currentJourneyId = id;
+    currentJourneyId = 0;
     await Provider.of<JourneysData>(context, listen: false)
         .setJourney(currentJourneyId);
     //  imageCache.clear();
@@ -84,7 +84,7 @@ class CurrentJourney with ChangeNotifier {
     if (shouldFetchWeight) {
       print('shouldFetchWeight $shouldFetchWeight');
       await Provider.of<WeightAndPicturesData>(context, listen: false)
-          .fetchAndSetData(id);
+          .fetchAndSetData(0);
     }
     notifyListeners();
   }
@@ -131,13 +131,14 @@ class JourneysData with ChangeNotifier {
     bool journeyOver,
     bool weightLoss,
   ) async {
-    SharedPreferences prefs =
-        Provider.of<SharedPreferencesData>(context, listen: false).get();
+    // SharedPreferences prefs =
+    //     Provider.of<SharedPreferencesData>(context, listen: false).get();
 
-    int id = prefs.getInt('journeyCount') + 1;
-    print('$id');
-    await prefs.setInt('currentJourneyId', id);
-    await prefs.setInt('journeyCount', id);
+    int id = 0;
+    //prefs.getInt('journeyCount') + 1;
+    // print('$id');
+    // await prefs.setInt('currentJourneyId', id);
+    // await prefs.setInt('journeyCount', id);
     await Provider.of<CurrentJourney>(context, listen: false)
         .set(id, context, false, true);
     journey = Journey(
@@ -149,7 +150,7 @@ class JourneysData with ChangeNotifier {
       weightLoss: weightLoss,
       weightTableName: 'weightDatabaseTableName$id',
     );
-    journeysList.add(journey);
+    journeysList = [journey]; //.add();
     print('add journey ${journey.weightLoss}');
     Map<String, Object> journeyMap = {
       'id': id,
@@ -168,7 +169,8 @@ class JourneysData with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteSingleJourney(int id, BuildContext context) async {
+  Future<void> deleteSingleJourney(BuildContext context) async {
+    int id = 0;
     bool sameId =
         Provider.of<CurrentJourney>(context, listen: false).get() == id;
     if (sameId) {
@@ -185,8 +187,7 @@ class JourneysData with ChangeNotifier {
   }
 
   Future<void> setJourney(int currentJourneyId) async {
-    if (currentJourneyId != 0)
-      journey = await journeysList.firstWhere((e) => e.id == currentJourneyId);
+    journey = journeysList[0];
     notifyListeners();
   }
 
@@ -210,7 +211,7 @@ class JourneysData with ChangeNotifier {
 
     if (currentJourneyId != null && journeysList.isNotEmpty) {
       print('currentJourneyId$currentJourneyId');
-      await setJourney(currentJourneyId);
+      await setJourney(0);
     }
 
     notifyListeners();

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:wlbaf/models/modelClasses.dart';
 import 'dart:io' as io;
+
+import 'package:wlbaf/screens/GalleryViewScreen.dart';
 
 class TwoImages extends StatefulWidget {
   num firstImageWeight;
@@ -19,11 +22,14 @@ class _TwoImagesState extends State<TwoImages> {
   // double width2 = 0.54;
   double width1 = 0.40;
   double width2 = 0.52;
-
+  double height1 = 0.307;
+  double height2 = 0.4;
   @override
   Widget build(BuildContext context) {
     double ratio = MediaQuery.of(context).size.height / 896;
     double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return Container(
       margin: EdgeInsets.only(top: 22 * ratio),
       //  color: Colors.amber[400],
@@ -35,9 +41,20 @@ class _TwoImagesState extends State<TwoImages> {
             children: [
               GestureDetector(
                 onTap: () {
+                  if (width1 > width2) {
+                    Navigator.of(context).pushNamed(GalleryViewScreen.routeName,
+                        arguments: ScreenArguments(list: [
+                          WeightAndPic(
+                            path: widget.path1,
+                          ),
+                          WeightAndPic(path: widget.path2)
+                        ], number: 0));
+                  }
                   setState(() {
                     width1 = 0.52;
                     width2 = 0.40;
+                    height1 = 0.4;
+                    height2 = 0.307;
                   });
                 },
                 child: Container(
@@ -54,7 +71,7 @@ class _TwoImagesState extends State<TwoImages> {
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(11),
                     ),
-                    //  height: 200,
+                    height: height * height1,
                     width: width * width1,
                     //   margin: EdgeInsets.only(bottom: 0),
                     padding: EdgeInsets.symmetric(vertical: 0),
@@ -97,9 +114,20 @@ class _TwoImagesState extends State<TwoImages> {
             children: [
               GestureDetector(
                 onTap: () {
+                  if (width2 > width1) {
+                    Navigator.of(context).pushNamed(GalleryViewScreen.routeName,
+                        arguments: ScreenArguments(list: [
+                          WeightAndPic(
+                            path: widget.path1,
+                          ),
+                          WeightAndPic(path: widget.path2)
+                        ], number: 1));
+                  }
                   setState(() {
                     width2 = 0.52;
                     width1 = 0.40;
+                    height2 = 0.4;
+                    height1 = 0.307;
                   });
                 },
                 child: Container(
@@ -117,7 +145,7 @@ class _TwoImagesState extends State<TwoImages> {
                     borderRadius: BorderRadius.circular(11),
                   ),
                   width: width * width2,
-                  //   height: 330,
+                  height: height * height2,
                   //  margin: EdgeInsets.only(top: 30),
                   padding: EdgeInsets.symmetric(vertical: 0),
                   child: ClipRRect(

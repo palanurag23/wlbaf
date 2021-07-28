@@ -163,16 +163,27 @@ class _PhotoGalleryState extends State<PhotoGallery> {
 
                           ),
                       Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
+                        bottom: 3,
+                        left: 3,
                         child: Center(
-                          child: Text(
-                            NumberFormat("###.#")
-                                .format(photoWeightList[index].weight),
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w300),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black38,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: EdgeInsets.only(
+                                top: 1,
+                                bottom: 1,
+                                left: 2 * ratio,
+                                right: 2 * ratio),
+                            child: Text(
+                              NumberFormat("###.#")
+                                  .format(photoWeightList[index].weight),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w300),
+                            ),
                           ),
                         ),
                       ),
