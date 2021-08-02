@@ -137,51 +137,87 @@ class _MonthsWeightAndPicsScreenState extends State<MonthsWeightAndPicsScreen> {
                                     Positioned(
                                       child: IconButton(
                                         onPressed: () async {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  duration:
-                                                      Duration(seconds: 1),
-                                                  backgroundColor:
-                                                      Colors.blueGrey[700],
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: Text("Are you sure ?"),
                                                   content: Text(
-                                                      'Weight and Picture deleted')));
-                                          bool shouldNavigate =
-                                              Provider.of<WeightAndPicturesData>(
-                                                          context,
-                                                          listen: false)
-                                                      .weightAndPics
-                                                      .length ==
-                                                  1;
-                                          await Provider.of<
-                                                      WeightAndPicturesData>(
-                                                  context,
-                                                  listen: false)
-                                              .deleteSingleWeightAndPics(
-                                                  weightAndPicList[index]
-                                                      .dateTime,
-                                                  id);
-                                          pictureAndWeightList.removeWhere(
-                                              (element) =>
-                                                  element.dateTime ==
-                                                  weightAndPicList[index]
-                                                      .dateTime);
-                                          setState(() {
-                                            weightAndPicList.removeWhere(
-                                                (element) =>
-                                                    element.dateTime ==
-                                                    weightAndPicList[index]
-                                                        .dateTime);
-                                          });
-                                          if (shouldNavigate) {
-                                            setState(() {
-                                              lastDelete = true;
-                                            });
-                                            // Navigator.of(context).popUntil(
-                                            //      ModalRoute.withName('name'));
-                                            // Navigator.of(context)
-                                            //     .pushReplacementNamed(
-                                            //         '/AddNewJourney');
-                                          }
+                                                      "This picture will be permanently deleted from here."),
+                                                  actions: [
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: Text('cancel')),
+                                                    TextButton(
+                                                        onPressed: () async {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(SnackBar(
+                                                                  duration: Duration(
+                                                                      seconds:
+                                                                          1),
+                                                                  backgroundColor:
+                                                                      Colors.blueGrey[
+                                                                          700],
+                                                                  content: Text(
+                                                                      'Weight and Picture deleted')));
+                                                          bool shouldNavigate =
+                                                              Provider.of<WeightAndPicturesData>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .weightAndPics
+                                                                      .length ==
+                                                                  1;
+                                                          await Provider.of<
+                                                                      WeightAndPicturesData>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .deleteSingleWeightAndPics(
+                                                                  weightAndPicList[
+                                                                          index]
+                                                                      .dateTime,
+                                                                  id);
+                                                          pictureAndWeightList
+                                                              .removeWhere((element) =>
+                                                                  element
+                                                                      .dateTime ==
+                                                                  weightAndPicList[
+                                                                          index]
+                                                                      .dateTime);
+                                                          setState(() {
+                                                            weightAndPicList.removeWhere((element) =>
+                                                                element
+                                                                    .dateTime ==
+                                                                weightAndPicList[
+                                                                        index]
+                                                                    .dateTime);
+                                                          });
+                                                          if (shouldNavigate) {
+                                                            setState(() {
+                                                              lastDelete = true;
+                                                            });
+                                                            // Navigator.of(context).popUntil(
+                                                            //      ModalRoute.withName('name'));
+                                                            // Navigator.of(context)
+                                                            //     .pushReplacementNamed(
+                                                            //         '/AddNewJourney');
+                                                          }
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: Text(
+                                                          'delete',
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .redAccent),
+                                                        )),
+                                                  ],
+                                                );
+                                              });
                                         },
                                         icon: Icon(Icons.delete),
                                         color: Colors.white,
@@ -199,49 +235,90 @@ class _MonthsWeightAndPicsScreenState extends State<MonthsWeightAndPicsScreen> {
                                     Positioned(
                                       child: IconButton(
                                         onPressed: () async {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  duration:
-                                                      Duration(seconds: 1),
-                                                  backgroundColor:
-                                                      Colors.blueGrey[700],
-                                                  content:
-                                                      Text('Weight deleted')));
-                                          bool shouldNavigate =
-                                              Provider.of<WeightAndPicturesData>(
-                                                          context,
-                                                          listen: false)
-                                                      .weightAndPics
-                                                      .length ==
-                                                  1;
-                                          await Provider.of<
-                                                      WeightAndPicturesData>(
-                                                  context,
-                                                  listen: false)
-                                              .deleteSingleWeightAndPics(
-                                                  weightAndPicList[index]
-                                                      .dateTime,
-                                                  id);
-                                          pictureAndWeightList.removeWhere(
-                                              (element) =>
-                                                  element.dateTime ==
-                                                  weightAndPicList[index]
-                                                      .dateTime);
-                                          setState(() {
-                                            weightAndPicList.removeWhere(
-                                                (element) =>
-                                                    element.dateTime ==
-                                                    weightAndPicList[index]
-                                                        .dateTime);
-                                          });
-                                          if (shouldNavigate) {
-                                            setState(() {
-                                              lastDelete = true;
-                                            });
-                                            // Navigator.of(context)
-                                            //     .pushReplacementNamed(
-                                            //         '/AddNewJourney');
-                                          }
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                    title:
+                                                        Text("Are you sure ?"),
+                                                    content: Text(
+                                                        "Are you sure you want to delete this entry."),
+                                                    actions: [
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child:
+                                                              Text('cancel')),
+                                                      TextButton(
+                                                          onPressed: () async {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(SnackBar(
+                                                                    duration: Duration(
+                                                                        seconds:
+                                                                            1),
+                                                                    backgroundColor:
+                                                                        Colors.blueGrey[
+                                                                            700],
+                                                                    content: Text(
+                                                                        'Weight deleted')));
+                                                            bool shouldNavigate = Provider.of<
+                                                                            WeightAndPicturesData>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .weightAndPics
+                                                                    .length ==
+                                                                1;
+                                                            await Provider.of<
+                                                                        WeightAndPicturesData>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                                .deleteSingleWeightAndPics(
+                                                                    weightAndPicList[
+                                                                            index]
+                                                                        .dateTime,
+                                                                    id);
+                                                            pictureAndWeightList
+                                                                .removeWhere((element) =>
+                                                                    element
+                                                                        .dateTime ==
+                                                                    weightAndPicList[
+                                                                            index]
+                                                                        .dateTime);
+                                                            setState(() {
+                                                              weightAndPicList.removeWhere((element) =>
+                                                                  element
+                                                                      .dateTime ==
+                                                                  weightAndPicList[
+                                                                          index]
+                                                                      .dateTime);
+                                                            });
+                                                            if (shouldNavigate) {
+                                                              setState(() {
+                                                                lastDelete =
+                                                                    true;
+                                                              });
+                                                              // Navigator.of(context)
+                                                              //     .pushReplacementNamed(
+                                                              //         '/AddNewJourney');
+                                                            }
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Text(
+                                                            'delete',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .redAccent),
+                                                          ))
+                                                    ]);
+                                              });
                                         },
                                         icon: Icon(Icons.delete),
                                         color: Colors.blueGrey[300],

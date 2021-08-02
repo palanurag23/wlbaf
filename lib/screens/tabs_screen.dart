@@ -173,35 +173,48 @@ class _TabsScreenState extends State<TabsScreen> {
                     : _pages[_selectedPageIndex]['page'],
               ),
         drawer: Drawer(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                height: 70,
-                color: Colors.amberAccent,
-              ),
-              ListTile(
-                tileColor: Colors.black,
-                onTap: () {
-                  Navigator.of(context).pushNamed('/JourneyListScreen');
-                },
-              ),
-              Container(
-                child: ListTile(
-                  title: Text('data testing screen'),
-                  tileColor: Colors.pinkAccent,
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/TestingDataScreen');
-                  },
+          child: Container(
+            color: Colors.blueGrey[50],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  //  height: 70,
+                  padding: EdgeInsets.only(top: 45, bottom: 22),
+                  child: Center(
+                      child: Text(
+                    'Weight loss before and after',
+                    style: TextStyle(
+                        color: Colors.grey[800],
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.normal,
+                        fontFamily: 'Open Sans',
+                        fontSize: 20),
+                  )),
                 ),
-              ),
-              ListTile(
-                title: Text('image'),
-                onTap: () {
-                  Navigator.of(context).pushNamed('/ips');
-                },
-              )
-            ],
+                // ListTile(
+                //   tileColor: Colors.black,
+                //   onTap: () {
+                //     Navigator.of(context).pushNamed('/JourneyListScreen');
+                //   },
+                // ),
+                // Container(
+                //   child: ListTile(
+                //     title: Text('data testing screen'),
+                //     tileColor: Colors.pinkAccent,
+                //     onTap: () {
+                //       Navigator.of(context).pushNamed('/TestingDataScreen');
+                //     },
+                //   ),
+                // ),
+                // ListTile(
+                //   title: Text('image'),
+                //   onTap: () {
+                //     Navigator.of(context).pushNamed('/ips');
+                //   },
+                // )
+              ],
+            ),
           ),
         ),
         appBar: AppBar(
