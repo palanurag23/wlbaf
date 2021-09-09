@@ -190,14 +190,12 @@ class _AddNewJourneyState extends State<AddNewJourney> {
                   }
                 : () async {
                     print('if' +
-                        _noteController.text.isNotEmpty.toString() +
+                        // _noteController.text.isNotEmpty.toString() +
                         (_image != null).toString());
 
                     if ( //_noteController.text.isNotEmpty &&
                         _image != null) {
-                      print('if' +
-                          _noteController.text.isNotEmpty.toString() +
-                          (_image != null).toString());
+                      print('if' + (_image != null).toString());
                       setState(() {
                         saving = true;
                       });

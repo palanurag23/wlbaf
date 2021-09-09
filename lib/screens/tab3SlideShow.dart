@@ -166,7 +166,8 @@ class _Tab3State extends State<Tab3> {
                                     enableInfiniteScroll: true,
                                     reverse: false,
                                     autoPlay: autoPlay,
-                                    autoPlayInterval: Duration(seconds: 2),
+                                    autoPlayInterval:
+                                        Duration(seconds: 1, milliseconds: 500),
                                     autoPlayAnimationDuration:
                                         Duration(milliseconds: 1000),
                                     autoPlayCurve: Curves.fastOutSlowIn,
@@ -233,6 +234,9 @@ class _Tab3State extends State<Tab3> {
                                         if (index < 5) {
                                           weightAndPicBloc
                                               .addData(numberOfPics[index + 1]);
+                                          setState(() {
+                                            index = index + 1;
+                                          });
                                         } else {
                                           weightAndPicBloc.addData(length);
                                         }
@@ -259,15 +263,35 @@ class _Tab3State extends State<Tab3> {
                                             fontWeight: FontWeight.w900),
                                         children: <TextSpan>[
                                           TextSpan(
-                                              text: snapshot.data.length
-                                                  .toString(),
+                                              text: autoPlay
+                                                  ? 'Showing '
+                                                  : 'Show ',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontStyle: FontStyle.italic,
+                                                  fontSize: 20 * ratio,
+                                                  fontWeight: FontWeight.bold)),
+                                          TextSpan(
+                                              text:
+                                                  length > snapshot.data.length
+                                                      ? 'last '
+                                                      : 'all ',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontStyle: FontStyle.italic,
+                                                  fontSize: 20 * ratio,
+                                                  fontWeight: FontWeight.bold)),
+                                          TextSpan(
+                                              text: '${snapshot.data.length}',
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontStyle: FontStyle.italic,
                                                   fontSize: 30 * ratio,
                                                   fontWeight: FontWeight.bold)),
                                           TextSpan(
-                                              text: ' pics'.toString(),
+                                              text: snapshot.data.length > 1
+                                                  ? ' pics'.toString()
+                                                  : ' pic'.toString(),
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontStyle: FontStyle.italic,
@@ -284,6 +308,9 @@ class _Tab3State extends State<Tab3> {
                                       if (index > 0) {
                                         weightAndPicBloc
                                             .addData(numberOfPics[index - 1]);
+                                        setState(() {
+                                          index = index - 1;
+                                        });
                                       }
                                     },
                                     child: Icon(

@@ -66,8 +66,35 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(child: CircularProgressIndicator()),
+    return Scaffold(
+      backgroundColor: Colors.blueGrey[900],
+      body: Center(
+          child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Weight Loss',
+            style: TextStyle(
+                color: Colors.blueGrey[50],
+                fontWeight: FontWeight.w800,
+                fontStyle: FontStyle.italic,
+                fontFamily: 'Open Sans',
+                fontSize: 40),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            'Before and After',
+            style: TextStyle(
+                color: Colors.blueGrey[200],
+                fontWeight: FontWeight.w800,
+                fontStyle: FontStyle.italic,
+                fontFamily: 'Open Sans',
+                fontSize: 24),
+          )
+        ],
+      )),
     );
   }
 }

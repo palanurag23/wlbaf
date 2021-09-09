@@ -5,6 +5,7 @@ import 'package:wlbaf/helpers/db_helper.dart';
 import 'package:wlbaf/models/modelClasses.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'package:rate_my_app/rate_my_app.dart';
 import 'package:intl/intl.dart';
 
 class MaterialNavigatorKey {
@@ -21,8 +22,6 @@ class SharedPreferencesData {
 
   SharedPreferences get() => prefs;
 }
-
-class RateMyAppData {}
 
 class CurrentJourney with ChangeNotifier {
   int currentJourneyId = 0;
@@ -72,20 +71,23 @@ class CurrentJourney with ChangeNotifier {
     // SharedPreferences prefs =
     //     Provider.of<SharedPreferencesData>(context, listen: false).get();
     // await prefs.setInt('currentJourneyId', id);
-
+    print('-2');
     currentJourneyId = 0;
     await Provider.of<JourneysData>(context, listen: false)
         .setJourney(currentJourneyId);
+    print('-3');
     //  imageCache.clear();
     if (shouldEmpty) {
       await Provider.of<WeightAndPicturesData>(context, listen: false)
           .setEmpty();
     }
+    print('-4');
     if (shouldFetchWeight) {
       print('shouldFetchWeight $shouldFetchWeight');
       await Provider.of<WeightAndPicturesData>(context, listen: false)
           .fetchAndSetData(0);
     }
+    print('-5');
     notifyListeners();
   }
 
@@ -133,14 +135,15 @@ class JourneysData with ChangeNotifier {
   ) async {
     // SharedPreferences prefs =
     //     Provider.of<SharedPreferencesData>(context, listen: false).get();
-
+    print('-1');
     int id = 0;
     //prefs.getInt('journeyCount') + 1;
     // print('$id');
     // await prefs.setInt('currentJourneyId', id);
     // await prefs.setInt('journeyCount', id);
-    await Provider.of<CurrentJourney>(context, listen: false)
-        .set(id, context, false, true);
+
+    print('0');
+
     journey = Journey(
       durationInWeeks: durationInWeeks,
       id: id,
@@ -150,11 +153,14 @@ class JourneysData with ChangeNotifier {
       weightLoss: weightLoss,
       weightTableName: 'weightDatabaseTableName$id',
     );
+    print('1');
     journeysList = [journey]; //.add();
+    await Provider.of<CurrentJourney>(context, listen: false)
+        .set(id, context, false, true);
     print('add journey ${journey.weightLoss}');
     Map<String, Object> journeyMap = {
       'id': id,
-      'name': name,
+      'name': 'name',
       'targetWeight': targetWeight,
       'targetDurationInWeeks': durationInWeeks,
       'weightTableName': journey.weightTableName,
@@ -315,4 +321,202 @@ class WeightAndPicturesData with ChangeNotifier {
     print(
         '................weightsAndpic length=${weightAndPicDataList.length} fetched and set for weightDatabaseTableName$journeyId');
   }
+}
+
+class RateMyAppData with ChangeNotifier {
+  String comment;
+  RateMyApp _rateMyApp;
+  set(RateMyApp rateMyApp) {
+    _rateMyApp = rateMyApp;
+  }
+
+  Future<void> addRatingCheck(BuildContext context) async {
+    SharedPreferences prefs =
+        Provider.of<SharedPreferencesData>(context, listen: false).get();
+    DateTime lastRatingDateTime =
+        DateTime.parse(prefs.getString('last_Rating_DateTime'));
+    int difference = DateTime.now().difference(lastRatingDateTime).inDays;
+    print('now minus last rating = $difference');
+    if (difference >= 7) {
+      print(difference);
+      Provider.of<RateMyAppData>(context, listen: false)
+          .showStarDialog(context);
+    }
+  }
+
+  RateMyApp get() => _rateMyApp;
+
+  Future<void> showStarDialog(BuildContext context) async {
+    /////either if user choose to rate or we asked him to..
+    ///ddialog is shown...so we shuold wait
+    SharedPreferences prefs =
+        Provider.of<SharedPreferencesData>(context, listen: false).get();
+    prefs.setString(
+        'last_Rating_DateTime', "${DateTime.now().toIso8601String()}");
+    ////
+    _rateMyApp.showStarRateDialog(context,
+        dialogStyle: DialogStyle(
+            messageStyle: TextStyle(
+                color: Colors.blueGrey[800], fontWeight: FontWeight.normal),
+            titleStyle: TextStyle(color: Colors.blueGrey[900], fontSize: 24),
+            titleAlign: TextAlign.center,
+            messagePadding:
+                EdgeInsets.only(left: 5, right: 5, bottom: 20, top: 5)),
+        // contentBuilder: (context, defaultContent) => Container(
+        //       height: 6,
+        //       width: 6,
+        //       color: Colors.amber,
+        //     ),
+        title: 'Did you like the app ?', // The dialog title.
+        message: 'How was your experience with us?', // The dialog message.
+        starRatingOptions: StarRatingOptions(initialRating: 5),
+        ignoreNativeDialog: true
+        //Platform
+        //  .isAndroid, // Set to false if you want to show the Apple's native app rating dialog on iOS or Google's native app rating dialog (depends on the current Platform).
+        ,
+        onDismissed: () =>
+            () {}, // Called when the user dismissed the dialog (either by taping outside or by pressing the "back" button).
+
+        actionsBuilder: (context, stars) {
+          // Triggered when the user updates the star rating.
+          return [
+            // RateMyAppNoButton(_rateMyApp, text: 'NO, THANKS'),
+            TextButton(
+                child: Text('NO, THANKS',
+                    style:
+                        TextStyle(color: Colors.blueGrey[400], fontSize: 15)),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                }),
+            // Return a list of actions (that will be shown at the bottom of the dialog).
+            TextButton(
+              child: Text('SUBMIT',
+                  style: TextStyle(color: Colors.pinkAccent, fontSize: 15)),
+              onPressed: () async {
+                bool nativeSupported =
+                    await _rateMyApp.isNativeReviewDialogSupported;
+                print('native supported= $nativeSupported ');
+                Navigator.of(context).pop();
+
+                stars >= 4
+                    ? nativeSupported
+                        ? _rateMyApp.showRateDialog(context,
+                            ignoreNativeDialog: false)
+                        : _rateMyApp.launchStore()
+                    : showCommentDialog(context, stars);
+                print('Thanks for the ' +
+                    (stars == null ? '0' : stars.round().toString()) +
+                    ' star(s) !');
+                _rateMyApp.callEvent(//to let system know
+                    RateMyAppEventType.rateButtonPressed);
+                // This allows to mimic the behavior of the default "Rate" button. See "Advanced > Broadcasting events" for more information :
+                // if (stars >= 4) {
+                //   showThanks(context);
+                // }
+              },
+            ),
+          ];
+        });
+  }
+
+  Future<void> showCommentDialog(BuildContext context, double stars) async {
+    final controller = TextEditingController();
+
+    _rateMyApp.showRateDialog(context,
+        ignoreNativeDialog: true,
+        contentBuilder: (context, _) => TextFormField(
+              controller: controller,
+              autofocus: true,
+              onFieldSubmitted: (_) => Navigator.of(context).pop(),
+              onChanged: (comment) {
+                // setState(() {
+                //   this.comment = comment;
+                // });
+              },
+              maxLines: 3,
+              decoration: InputDecoration(
+                hintText: 'comment',
+                border: OutlineInputBorder(),
+              ),
+            ),
+        title: 'Your experience',
+        actionsBuilder: (context) {
+          return [
+            RateMyAppNoButton(
+              _rateMyApp,
+              text: 'CANCEL',
+            ),
+            TextButton(
+                onPressed: () async {
+                  print('$comment');
+                  print('${controller.text}');
+                  Navigator.of(context).pop();
+
+                  // sendRatingsToFirebase(controller.text, stars);
+                  showThanks(context);
+                },
+                child: Text('send'))
+          ];
+        });
+  }
+
+  Future<void> showThanks(BuildContext context) async {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          Future.delayed(Duration(milliseconds: 1500))
+              .then((value) => Navigator.of(context).pop());
+
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                border: Border.all(
+                  width: 2,
+                  color: Colors.amber,
+                ),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.stars_sharp,
+                    color: Colors.amber,
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    'Thank you! for feedback',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueGrey[800]),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  // Future<void> sendRatingsToFirebase(String comment, double stars) async {
+  //   DateTime dt = DateTime.now();
+  //   print('ratings to firebase');
+  //   const url =
+  //       'https://bodytrac-e1b7b-default-rtdb.firebaseio.com/Ratings.json';
+  //   try {
+  //     final response = await http.post(url,
+  //         body: json.encode({
+  //           'Comment': '${dt.day}/${dt.month}/${dt.year}--$comment',
+  //           'Stars': stars
+  //         }));
+  //     print(response.body);
+  //   } catch (error) {}
+  // }
 }

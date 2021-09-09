@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: <SingleChildWidget>[
         ChangeNotifierProvider.value(value: UnitsData()),
+        ChangeNotifierProvider.value(value: RateMyAppData()),
         ChangeNotifierProvider.value(value: CurrentJourney()),
         ChangeNotifierProvider.value(value: JourneysData()),
         ChangeNotifierProvider.value(value: WeightAndPicturesData()),

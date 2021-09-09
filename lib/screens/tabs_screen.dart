@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:rate_my_app/rate_my_app.dart';
 import 'package:wlbaf/my_flutter_app_icons.dart';
 import 'package:wlbaf/progress_icon_icons.dart';
 import 'tab3SlideShow.dart';
@@ -179,18 +180,69 @@ class _TabsScreenState extends State<TabsScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  //  height: 70,
-                  padding: EdgeInsets.only(top: 45, bottom: 22),
+                  width: double.infinity,
+                  //height: 70,
+                  padding: EdgeInsets.only(top: 55, bottom: 25),
+                  color: Colors.cyan,
                   child: Center(
-                      child: Text(
-                    'Weight loss before and after',
-                    style: TextStyle(
-                        color: Colors.grey[800],
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.normal,
-                        fontFamily: 'Open Sans',
-                        fontSize: 20),
-                  )),
+                    child: Text(
+                      'Weight Loss - Before and After',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          fontStyle: FontStyle.italic,
+                          fontFamily: 'Open Sans',
+                          fontSize: 20),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 2),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.star,
+                      color: Colors.blueGrey[700],
+                    ),
+                    tileColor: Colors.white,
+                    title: Text('Rate this app',
+                        style: TextStyle(
+                          color: Colors.blueGrey[900],
+                        )),
+                    onTap: () {
+                      RateMyApp rateMyApp = RateMyApp();
+                      var contextX = Provider.of<MaterialNavigatorKey>(context,
+                              listen: false)
+                          .get()
+                          .currentContext;
+                      //  var rateMyApp =
+                      Provider.of<RateMyAppData>(context, listen: false)
+                          .set(rateMyApp);
+                      Provider.of<RateMyAppData>(context, listen: false)
+                          .showStarDialog(contextX);
+                    },
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 2),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.library_add_check_outlined,
+                      color: Colors.blueGrey[700],
+                    ),
+                    tileColor: Colors.white,
+                    title: Text('Show License Page',
+                        style: TextStyle(
+                          color: Colors.blueGrey[900],
+                        )),
+                    onTap: () {
+                      showLicensePage(
+                        context: context,
+                        // applicationIcon: Image.asset(name)
+                        // applicationName: "App Name"
+                        // Other parameters
+                      );
+                    },
+                  ),
                 ),
                 // ListTile(
                 //   tileColor: Colors.black,
