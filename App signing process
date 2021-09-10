@@ -1,0 +1,20 @@
+first make signing config in gradle to release
+
+then open this. https://flutter.dev/docs/deployment/android
+
+GENERAL command for terminal.    keytool -genkey -v -keystore ~/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+
+............meaning..........    Key-tool generate  keystore.  "name.jks".  _________________________________________________key Alias "alias"
+
+
+  FOR YOU 
+
+YOU RUN.  >>>>>>>
+           >>>>>>>  keytool -genkey -v -keystore ~/key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias key
+
+
+
+
+AND WATCH
+          https://www.youtube.com/watch?v=EU2gXX3XUJI&t=135s
+
