@@ -43,8 +43,9 @@ class MyApp extends StatelessWidget {
                 materialNavigatorKey: materialNavigatorKey)),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         navigatorKey: materialNavigatorKey,
-        title: 'Flutter Demo',
+        title: 'Weight Loss Before and After',
         theme: ThemeData(
           bottomAppBarColor: Colors.white,
           // This is the theme of your application.

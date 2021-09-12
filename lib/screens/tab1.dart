@@ -21,6 +21,7 @@ class _Tab1State extends State<Tab1> {
   int firstPicindex;
   Journey journey;
   bool onlyOnePic;
+  bool weightButNoImage = false;
   @override
   void didChangeDependencies() {
     if (!isInitialized) {
@@ -47,6 +48,11 @@ class _Tab1State extends State<Tab1> {
     firstPicindex = weightAndPics.indexWhere((element) => element.havePicture);
     lastPicindex =
         weightAndPics.lastIndexWhere((element) => element.havePicture);
+    if (firstPicindex == -1) {
+      weightButNoImage = true;
+    } else {
+      weightButNoImage = false;
+    }
     onlyOnePic = firstPicindex == lastPicindex;
     print('weightAndPics is empty =' +
         weightAndPics.isEmpty.toString() +
@@ -64,23 +70,24 @@ class _Tab1State extends State<Tab1> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Container(
-                            // color: Colors.blueGrey[50],
-                            child: onlyOnePic
-                                ? OneImage(
-                                    weightAndPics[firstPicindex].weight,
-                                    weightAndPics[firstPicindex].path,
-                                    units,
-                                  )
-                                : TwoImages(
-                                    path1: weightAndPics[firstPicindex].path,
-                                    path2: weightAndPics[lastPicindex].path,
-                                    firstImageWeight:
-                                        weightAndPics[firstPicindex].weight,
-                                    units: units,
-                                  ),
-                            //  color: Colors.blueGrey[100],
-                          ),
+                          if (!weightButNoImage)
+                            Container(
+                              // color: Colors.blueGrey[50],
+                              child: onlyOnePic
+                                  ? OneImage(
+                                      weightAndPics[firstPicindex].weight,
+                                      weightAndPics[firstPicindex].path,
+                                      units,
+                                    )
+                                  : TwoImages(
+                                      path1: weightAndPics[firstPicindex].path,
+                                      path2: weightAndPics[lastPicindex].path,
+                                      firstImageWeight:
+                                          weightAndPics[firstPicindex].weight,
+                                      units: units,
+                                    ),
+                              //  color: Colors.blueGrey[100],
+                            ),
                           CircleWidget(weightAndPics, units),
                           RunningMan(
                             journey: journey,

@@ -402,50 +402,60 @@ class _Tab2State extends State<Tab2> {
                         ],
                       ),
                     ),
-                    Container(
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text('    Goal ',
-                                  style: TextStyle(
-                                      color: Colors.blueGrey[400],
-                                      fontStyle: FontStyle.italic,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold)),
-                              Icon(
-                                Icons.lock,
-                                color: Colors.blueGrey[500],
-                                size: 15,
-                              ),
-                              Text('   ',
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, EditGoal.routeName);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.only(top: 3, bottom: 3),
+                        decoration: BoxDecoration(
+                          color: Colors.blueGrey[50],
+                          borderRadius: BorderRadius.circular(11),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text('    Goal ',
+                                    style: TextStyle(
+                                        color: Colors.blueGrey[400],
+                                        fontStyle: FontStyle.italic,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold)),
+                                Icon(
+                                  Icons.lock,
+                                  color: Colors.blueGrey[500],
+                                  size: 15,
+                                ),
+                                Text('   ',
+                                    style: TextStyle(
+                                        color: Colors.blueGrey[500],
+                                        fontStyle: FontStyle.italic,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold))
+                              ],
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                  text: NumberFormat("###.#")
+                                      .format(journey.targetWeight),
                                   style: TextStyle(
                                       color: Colors.blueGrey[500],
                                       fontStyle: FontStyle.italic,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold))
-                            ],
-                          ),
-                          RichText(
-                            text: TextSpan(
-                                text: NumberFormat("###.#")
-                                    .format(journey.targetWeight),
-                                style: TextStyle(
-                                    color: Colors.blueGrey[500],
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 20, //* ratio,
-                                    fontWeight: FontWeight.w900),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: units,
-                                      style: TextStyle(
-                                          color: Colors.blueGrey[500],
-                                          fontStyle: FontStyle.italic,
-                                          fontSize: 10 * ratio,
-                                          fontWeight: FontWeight.bold))
-                                ]),
-                          )
-                        ],
+                                      fontSize: 20, //* ratio,
+                                      fontWeight: FontWeight.w900),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: units,
+                                        style: TextStyle(
+                                            color: Colors.blueGrey[500],
+                                            fontStyle: FontStyle.italic,
+                                            fontSize: 10 * ratio,
+                                            fontWeight: FontWeight.bold))
+                                  ]),
+                            )
+                          ],
+                        ),
                       ),
                     )
                   ],

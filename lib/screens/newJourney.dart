@@ -20,8 +20,8 @@ class _AddNewJourneyState extends State<AddNewJourney> {
   TextEditingController _noteController;
   String note = '';
   ScrollController scrollController = ScrollController();
-  double _currentWeightValue = 150;
-  int _currentGoalValue = 40;
+  double _currentWeightValue = 180;
+  int _currentGoalValue = 175;
   int initialLabelIndex = 0;
   File _image;
   final picker = ImagePicker();
@@ -562,7 +562,7 @@ class _AddNewJourneyState extends State<AddNewJourney> {
                         ),
                         value: _currentWeightValue,
                         minValue: 0,
-                        maxValue: 1000,
+                        maxValue: 1400,
                         onChanged: (value) =>
                             setState(() => _currentWeightValue = value),
                       ),
@@ -670,7 +670,7 @@ class _AddNewJourneyState extends State<AddNewJourney> {
                           ),
                           minValue: 0,
                           axis: Axis.vertical,
-                          maxValue: 450,
+                          maxValue: 1400,
                           value: _currentGoalValue,
                           onChanged: (value) =>
                               setState(() => _currentGoalValue = value)),
